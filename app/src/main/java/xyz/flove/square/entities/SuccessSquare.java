@@ -6,10 +6,16 @@ import xyz.flove.square.enums.SuccessEnum;
 import android.util.SparseArray;
 
 /**
- * 成子 单方：放子或走子棋盘的任意地方成单一正方格。 双方：放子或走子棋盘的任意地方成二个正方格。
- * 三方：放子或走子棋盘的任意地方成三个正方格，仅出现在满盘前。 四方：放子或走子棋盘的任意地方成四个正方格，仅出现在满盘前。
- * 成拉：放子或走子五棋子在一条线上，横竖匀可（除四条边）。 三斜：放子或走子成三棋子在一条斜线上，仅有四个，标有实心。
- * 四斜：放子或走子成四棋子在一条斜线上，仅有四个，标有空心。 五斜：放子或走子成五棋子在一条斜线上，仅有二个。
+ * 成方：
+ * 单方：放子或走子棋盘的任意地方成单一正方格。
+ * 双方：放子或走子棋盘的任意地方成二个正方格。
+ * 三方：放子或走子棋盘的任意地方成三个正方格，仅出现在满盘前。
+ * 四方：放子或走子棋盘的任意地方成四个正方格，仅出现在满盘前。
+ * 成拉：放子或走子五棋子在一条线上，横竖匀可（除四条边）。
+ * 成斜：
+ * 三斜：放子或走子成三棋子在一条斜线上，仅有四个，标有实心。
+ * 四斜：放子或走子成四棋子在一条斜线上，仅有四个，标有空心。
+ * 五斜：放子或走子成五棋子在一条斜线上，仅有二个。
  *
  * @author preture
  */
@@ -21,6 +27,7 @@ public class SuccessSquare {
 
     public SuccessSquare(Piece piece) {
         this.piece = piece;
+        //存储棋子的每个成方的信息
         success = new SparseArray<SparseArray<Piece>>(20);
         this.isSuccess = false;
     }
@@ -287,11 +294,17 @@ public class SuccessSquare {
     public SuccessResult computeSuccess() {
         computeFoursquareSuccess();
         computeLineSuccess();
-        computeWNESObliqueSuccess();
-        computeENWSObliqueSuccess();
+        computeObliqueSuccess();
         return computeAllSuccess();
     }
 
+    /**
+     * 成方：放子或走子在棋盘的任意地方成正方格。
+     * 单方：放子或走子棋盘的任意地方成单一正方格。
+     * 双方：放子或走子棋盘的任意地方成二个正方格。
+     * 三方：放子或走子棋盘的任意地方成三个正方格，仅出现在满盘前。
+     * 四方：放子或走子棋盘的任意地方成四个正方格，仅出现在满盘前。
+     */
     private void computeFoursquareSuccess() {
         SparseArray<Piece> around = new SparseArray<Piece>(8);
         // 子的方位：中，西，西北，北，东北，东，东南，南，西南
@@ -391,6 +404,9 @@ public class SuccessSquare {
         }
     }
 
+    /**
+     * 成拉：放子或走子五棋子在一条线上，横竖匀可（除四条边）。
+     */
     private void computeLineSuccess() {
         if (piece.x == 0 || piece.x == 4 || piece.y == 0 || piece.y == 4) {
             return;
@@ -440,6 +456,20 @@ public class SuccessSquare {
         }
     }
 
+    /**
+     * 成斜：放子或走子成一条斜线。
+     * 三斜：放子或走子成三棋子在一条斜线上，仅有四个，标有实心。
+     * 四斜：放子或走子成四棋子在一条斜线上，仅有四个，标有空心。
+     * 五斜：放子或走子成五棋子在一条斜线上，仅有二个。
+     */
+    private void computeObliqueSuccess() {
+        computeWNESObliqueSuccess();
+        computeENWSObliqueSuccess();
+    }
+
+    /**
+     * 成斜：西北东南
+     */
     private void computeWNESObliqueSuccess() {
         switch (piece.y - piece.x) {
             case -2:
@@ -517,6 +547,9 @@ public class SuccessSquare {
         }
     }
 
+    /**
+     * 成斜：东北西南
+     */
     private void computeENWSObliqueSuccess() {
         switch (piece.y + piece.x) {
             case 2:

@@ -187,8 +187,8 @@ public class GameView extends View {
 						stepCount--;
 						return true;
 					}
+					changePlayer();
 				}
-				changePlayer();
 			} else if (board.status == BoardStatus.REMOVE) {
 				if (board.panel[x][y].color == player.color) {
 					removePiece(x, y);
