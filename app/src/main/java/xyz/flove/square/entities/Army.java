@@ -5,56 +5,69 @@ import xyz.flove.square.enums.Direction;
 
 public class Army {
 
-	public Color color;
-	public Piece[][] panel;
+    public boolean auto;
+    public Color color;
+    public Piece[][] panel;
 
-	public Army(Board board, Color color) {
-		this.panel = board.panel;
-		this.color = color;
-	}
+    public Army(Board board, Color color) {
+        this.panel = board.panel;
+        this.color = color;
+        this.auto = false;
+    }
 
-	/**
-	 * 下子
-	 * 
-	 * @param x
-	 * @param y
-	 * @return
-	 */
-	public int downPiece(int x, int y) {
-		return panel[x][y].getDownPieceStepCount(color);
-	}
+    public Army(Board board, Color color, boolean auto) {
+        this.panel = board.panel;
+        this.color = color;
+        this.auto = auto;
+    }
 
-	/**
-	 * 提子
-	 * 
-	 * @param x
-	 * @param y
-	 * @return
-	 */
-	public void removePiece(int x, int y) {
-		panel[x][y].handleRemovePiece();
-	}
+    /**
+     * 下子
+     *
+     * @param x
+     * @param y
+     * @return
+     */
+    public int downPiece(int x, int y) {
+        return panel[x][y].getDownPieceStepCount(color);
+    }
 
-	/**
-	 * 走子
-	 * 
-	 * @param x
-	 * @param y
-	 * @param direction
-	 * @return
-	 */
-	public int movePiece(int x, int y, Direction direction) {
-		return panel[x][y].getMovePieceStepCount(direction);
-	}
+    /**
+     * 提子
+     *
+     * @param x
+     * @param y
+     * @return
+     */
+    public void removePiece(int x, int y) {
+        panel[x][y].handleRemovePiece();
+    }
 
-	/**
-	 * 吃子
-	 * 
-	 * @param x
-	 * @param y
-	 * @return
-	 */
-	public void eatPiece(int x, int y) {
-		panel[x][y].color = Color.NULL;
-	}
+    /**
+     * 走子
+     *
+     * @param x
+     * @param y
+     * @param direction
+     * @return
+     */
+    public int movePiece(int x, int y, Direction direction) {
+        return panel[x][y].getMovePieceStepCount(direction);
+    }
+
+    /**
+     * 吃子
+     *
+     * @param x
+     * @param y
+     * @return
+     */
+    public void eatPiece(int x, int y) {
+        panel[x][y].color = Color.NULL;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("Army(%s, %s)", this.color, this.auto);
+    }
 }

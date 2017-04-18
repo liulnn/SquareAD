@@ -1,5 +1,7 @@
 package xyz.flove.square.entities;
 
+import xyz.flove.square.ai.ScoreAi;
+import xyz.flove.square.enums.Color;
 import xyz.flove.square.enums.Direction;
 import xyz.flove.square.enums.SuccessEnum;
 
@@ -295,7 +297,7 @@ public class SuccessSquare {
         computeFoursquareSuccess();
         computeLineSuccess();
         computeObliqueSuccess();
-        return computeAllSuccess();
+        return this.computeAllSuccess();
     }
 
     /**
@@ -640,7 +642,6 @@ public class SuccessSquare {
             if (null == successPieces || successPieces.size() == 0) {
                 continue;
             }
-            System.out.println("success:" + i);
             if (i == SuccessEnum.WEST_NORTH_SQUARE.ordinal()
                     || i == SuccessEnum.WEST_SORTH_SQUARE.ordinal()
                     || i == SuccessEnum.EAST_NORTH_SQUARE.ordinal()
