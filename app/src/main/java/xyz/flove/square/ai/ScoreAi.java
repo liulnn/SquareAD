@@ -51,6 +51,10 @@ public class ScoreAi extends Army {
                         panel1[i][j].color = Color.BLACK;
                     }
                     int score1 = new SuccessSquare(p1).computeSuccess().score;
+                    if (maxScore <= score1) {
+                        maxScore = score1;
+                        piece = p1;
+                    }
                 }
             }
         }
