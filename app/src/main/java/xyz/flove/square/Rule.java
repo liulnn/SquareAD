@@ -17,7 +17,7 @@ public class Rule {
     public Rule(Army army, Position position) {
         this.army = army;
         this.position = position;
-        army.board.panel[position.x][position.y] = new Piece(position, this.army.color);
+        army.board.addPiece(position, this.army.color);
     }
 
     public void squares() {
@@ -35,38 +35,38 @@ public class Rule {
      */
     private void computeFoursquareSuccess() {
         // 子的方位：中，西，西北，北，东北，东，东南，南，西南
-        Piece piece = army.board.panel[position.x][position.y];
+        Piece piece = army.board.getPiece(position.x, position.y);
         Piece westPiece = null;
         if (piece.position.x - 1 >= 0) {
-            westPiece = army.board.panel[position.x - 1][position.y];
+            westPiece = army.board.getPiece(position.x - 1, position.y);
         }
         Piece westNorthPiece = null;
         if (piece.position.x - 1 >= 0 && piece.position.y - 1 >= 0) {
-            westNorthPiece = army.board.panel[position.x - 1][position.y - 1];
+            westNorthPiece = army.board.getPiece(position.x - 1, position.y - 1);
         }
         Piece northPiece = null;
         if (piece.position.y - 1 >= 0) {
-            northPiece = army.board.panel[position.x][position.y - 1];
+            northPiece = army.board.getPiece(position.x, position.y - 1);
         }
         Piece eastNorthPiece = null;
         if (piece.position.x + 1 <= 4 && piece.position.y - 1 >= 0) {
-            eastNorthPiece = army.board.panel[position.x + 1][position.y - 1];
+            eastNorthPiece = army.board.getPiece(position.x + 1, position.y - 1);
         }
         Piece eastPiece = null;
         if (piece.position.x + 1 <= 4) {
-            eastPiece = army.board.panel[position.x + 1][position.y];
+            eastPiece = army.board.getPiece(position.x + 1, position.y);
         }
         Piece eastSorthPiece = null;
         if (piece.position.x + 1 <= 4 && piece.position.y + 1 <= 4) {
-            eastSorthPiece = army.board.panel[position.x + 1][position.y + 1];
+            eastSorthPiece = army.board.getPiece(position.x + 1, position.y + 1);
         }
         Piece sorthPiece = null;
         if (piece.position.y + 1 <= 4) {
-            sorthPiece = army.board.panel[position.x][position.y + 1];
+            sorthPiece = army.board.getPiece(position.x, position.y + 1);
         }
         Piece westSorthPiece = null;
         if (piece.position.x - 1 >= 0 && piece.position.y + 1 <= 4) {
-            westSorthPiece = army.board.panel[position.x - 1][position.y + 1];
+            westSorthPiece = army.board.getPiece(position.x - 1, position.y + 1);
         }
 
         // 西北方
@@ -123,7 +123,7 @@ public class Rule {
         if (position.x == 0 || position.x == 4 || position.y == 0 || position.y == 4) {
             return;
         }
-        Piece piece = army.board.panel[position.x][position.y];
+        Piece piece = army.board.getPiece(position.x, position.y);
 
         Piece[] latLinePieces = new Piece[5];
         Piece[] lonLinePieces = new Piece[5];
@@ -132,17 +132,17 @@ public class Rule {
         int lonLineCounter = 0;
 
         for (int i = 0; i < 5; i++) {
-            if (null != army.board.panel[i][position.y]
-                    && army.board.panel[i][position.y].color.equals(piece.color)) {
-                latLinePieces[i] = army.board.panel[i][position.y];
+            if (null != army.board.getPiece(i, position.y)
+                    && army.board.getPiece(i, position.y).color.equals(piece.color)) {
+                latLinePieces[i] = army.board.getPiece(i, position.y);
                 latLineCounter++;
             }
 
         }
         for (int i = 0; i < 5; i++) {
-            if (null != army.board.panel[position.x][i]
-                    && army.board.panel[position.x][i].color.equals(piece.color)) {
-                lonLinePieces[i] = army.board.panel[position.x][i];
+            if (null != army.board.getPiece(position.x, i)
+                    && army.board.getPiece(position.x, i).color.equals(piece.color)) {
+                lonLinePieces[i] = army.board.getPiece(position.x, i);
                 lonLineCounter++;
             }
         }
@@ -193,16 +193,16 @@ public class Rule {
      * 五斜：放子或走子成五棋子在一条斜线上，仅有二个。
      */
     private void computeObliqueSuccess() {
-        Piece piece = army.board.panel[position.x][position.y];
+        Piece piece = army.board.getPiece(position.x, position.y);
         //成斜：西北东南
         switch (position.y - position.x) {
             case -2:
                 Piece[] wnesRightThreeObliquePieces = new Piece[3];
                 int wnesRightThreeObliqueCounter = 0;
                 for (int i = 0; i + 2 <= 4; i++) {
-                    if (null != army.board.panel[i + 2][i]
-                            && army.board.panel[i + 2][i].color.equals(piece.color)) {
-                        wnesRightThreeObliquePieces[i] = army.board.panel[i + 2][i];
+                    if (null != army.board.getPiece(i + 2, i)
+                            && army.board.getPiece(i + 2, i).color.equals(piece.color)) {
+                        wnesRightThreeObliquePieces[i] = army.board.getPiece(i + 2, i);
                         wnesRightThreeObliqueCounter += 1;
                     }
                 }
@@ -216,9 +216,9 @@ public class Rule {
                 Piece[] wnesRightFourObliquePieces = new Piece[4];
                 int wnesRightFourObliqueCounter = 0;
                 for (int i = 0; i + 1 <= 4; i++) {
-                    if (null != army.board.panel[i + 1][i]
-                            && army.board.panel[i + 1][i].color.equals(piece.color)) {
-                        wnesRightFourObliquePieces[i] = army.board.panel[i + 1][i];
+                    if (null != army.board.getPiece(i + 1, i)
+                            && army.board.getPiece(i + 1, i).color.equals(piece.color)) {
+                        wnesRightFourObliquePieces[i] = army.board.getPiece(i + 1, i);
                         wnesRightFourObliqueCounter++;
                     }
                 }
@@ -232,9 +232,9 @@ public class Rule {
                 Piece[] wnesCenterObliquePieces = new Piece[5];
                 int wnesCenterObliqueCounter = 0;
                 for (int i = 0; i <= 4; i++) {
-                    if (null != army.board.panel[i][i]
-                            && army.board.panel[i][i].color.equals(piece.color)) {
-                        wnesCenterObliquePieces[i] = army.board.panel[i][i];
+                    if (null != army.board.getPiece(i, i)
+                            && army.board.getPiece(i, i).color.equals(piece.color)) {
+                        wnesCenterObliquePieces[i] = army.board.getPiece(i, i);
                         wnesCenterObliqueCounter++;
                     }
                 }
@@ -248,9 +248,9 @@ public class Rule {
                 Piece[] wnesLeftFourObliquePieces = new Piece[4];
                 int wnesLeftFourObliqueCounter = 0;
                 for (int i = 0; i + 1 <= 4; i++) {
-                    if (null != army.board.panel[i][i + 1]
-                            && army.board.panel[i][i + 1].color.equals(piece.color)) {
-                        wnesLeftFourObliquePieces[i] = army.board.panel[i][i + 1];
+                    if (null != army.board.getPiece(i, i + 1)
+                            && army.board.getPiece(i, i + 1).color.equals(piece.color)) {
+                        wnesLeftFourObliquePieces[i] = army.board.getPiece(i, i + 1);
                         wnesLeftFourObliqueCounter++;
                     }
                 }
@@ -264,9 +264,9 @@ public class Rule {
                 Piece[] wnesLeftThreeObliquePieces = new Piece[3];
                 int wnesLeftThreeObliqueCounter = 0;
                 for (int i = 0; i + 2 <= 4; i++) {
-                    if (null != army.board.panel[i][i + 2]
-                            && army.board.panel[i][i + 2].color.equals(piece.color)) {
-                        wnesLeftThreeObliquePieces[i] = army.board.panel[i][i + 2];
+                    if (null != army.board.getPiece(i, i + 2)
+                            && army.board.getPiece(i, i + 2).color.equals(piece.color)) {
+                        wnesLeftThreeObliquePieces[i] = army.board.getPiece(i, i + 2);
                         wnesLeftThreeObliqueCounter++;
                     }
                 }
@@ -286,9 +286,9 @@ public class Rule {
                 Piece[] enwsLeftThreeObliquePieces = new Piece[3];
                 int enwsLeftThreeObliqueCounter = 0;
                 for (int i = 0; 2 - i >= 0; i++) {
-                    if (null != army.board.panel[i][2 - i]
-                            && army.board.panel[i][2 - i].color.equals(piece.color)) {
-                        enwsLeftThreeObliquePieces[i] = army.board.panel[i][2 - i];
+                    if (null != army.board.getPiece(i, 2 - i)
+                            && army.board.getPiece(i, 2 - i).color.equals(piece.color)) {
+                        enwsLeftThreeObliquePieces[i] = army.board.getPiece(i, 2 - i);
                         enwsLeftThreeObliqueCounter++;
                     }
                 }
@@ -302,9 +302,9 @@ public class Rule {
                 Piece[] enwsLeftFourObliquePieces = new Piece[4];
                 int enwsLeftFourObliqueCounter = 0;
                 for (int i = 0; 3 - i >= 0; i++) {
-                    if (null != army.board.panel[i][3 - i]
-                            && army.board.panel[i][3 - i].color.equals(piece.color)) {
-                        enwsLeftFourObliquePieces[i] = army.board.panel[i][3 - i];
+                    if (null != army.board.getPiece(i, 3 - i)
+                            && army.board.getPiece(i, 3 - i).color.equals(piece.color)) {
+                        enwsLeftFourObliquePieces[i] = army.board.getPiece(i, 3 - i);
                         enwsLeftFourObliqueCounter++;
                     }
                 }
@@ -318,9 +318,9 @@ public class Rule {
                 Piece[] enwsCenterObliquePieces = new Piece[5];
                 int enwsCenterObliqueCounter = 0;
                 for (int i = 0; 4 - i >= 0; i++) {
-                    if (null != army.board.panel[i][4 - i]
-                            && army.board.panel[i][4 - i].color.equals(piece.color)) {
-                        enwsCenterObliquePieces[i] = army.board.panel[i][4 - i];
+                    if (null != army.board.getPiece(i, 4 - i)
+                            && army.board.getPiece(i, 4 - i).color.equals(piece.color)) {
+                        enwsCenterObliquePieces[i] = army.board.getPiece(i, 4 - i);
                         enwsCenterObliqueCounter++;
                     }
                 }
@@ -334,9 +334,9 @@ public class Rule {
                 Piece[] enwsRightFourObliquePieces = new Piece[4];
                 int enwsRightFourObliqueCounter = 0;
                 for (int i = 1; 5 - i >= 1; i++) {
-                    if (null != army.board.panel[i][5 - i]
-                            && army.board.panel[i][5 - i].color.equals(piece.color)) {
-                        enwsRightFourObliquePieces[i - 1] = army.board.panel[i][5 - i];
+                    if (null != army.board.getPiece(i, 5 - i)
+                            && army.board.getPiece(i, 5 - i).color.equals(piece.color)) {
+                        enwsRightFourObliquePieces[i - 1] = army.board.getPiece(i, 5 - i);
                         enwsRightFourObliqueCounter++;
                     }
                 }
@@ -350,9 +350,9 @@ public class Rule {
                 Piece[] enwsRightThreeObliquePieces = new Piece[3];
                 int enwsRightThreeObliqueCounter = 0;
                 for (int i = 2; 6 - i >= 2; i++) {
-                    if (null != army.board.panel[i][6 - i]
-                            && army.board.panel[i][6 - i].color.equals(piece.color)) {
-                        enwsRightThreeObliquePieces[i - 2] = army.board.panel[i][6 - i];
+                    if (null != army.board.getPiece(i, 6 - i)
+                            && army.board.getPiece(i, 6 - i).color.equals(piece.color)) {
+                        enwsRightThreeObliquePieces[i - 2] = army.board.getPiece(i, 6 - i);
                         enwsRightThreeObliqueCounter++;
                     }
                 }

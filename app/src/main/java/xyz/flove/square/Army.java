@@ -23,9 +23,9 @@ public abstract class Army {
      * @param p 下子的位置
      * @return -1:此处不能下子, 0:切换队手, n:返回继续下子的个数
      */
-    int downPiece(Position p) {
+    public int downPiece(Position p) {
         Piece piece = board.getPiece(p);
-        if (null != piece && piece.color != Color.NULL) {
+        if (null != piece && !piece.color.equals(Color.NULL)) {
             return -1;
         }
         new Rule(this, p).squares();

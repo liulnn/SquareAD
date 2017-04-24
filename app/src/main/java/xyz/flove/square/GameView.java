@@ -61,9 +61,9 @@ public class GameView extends View {
                 for (int j = 0; j < this.panelLength; j++) {
                     int xx = (int) (Math.random() * 2);
                     if (xx == 1) {
-                        board.panel[i][j].color = Color.BLACK;
+                        board.getPiece(i, j).color = Color.BLACK;
                     } else {
-                        board.panel[i][j].color = Color.WHITE;
+                        board.getPiece(i, j).color = Color.WHITE;
                     }
 
                 }
@@ -105,14 +105,14 @@ public class GameView extends View {
 
     public void drawPiece(Canvas canvas) {
         board.draw();
-        for (int x = 0; x < board.panel[0].length; x++) {
-            for (int y = 0; y < board.panel[0].length; y++) {
-                if (board.panel[x][y] == null) {
+        for (int x = 0; x < board.getLength(); x++) {
+            for (int y = 0; y < board.getLength(); y++) {
+                if (board.getPiece(x, y) == null) {
                     continue;
                 }
-                if (board.panel[x][y].color.equals(Color.WHITE)) {
+                if (board.getPiece(x, y).color.equals(Color.WHITE)) {
                     mPiecePaint.setColor(android.graphics.Color.WHITE);
-                } else if (board.panel[x][y].color.equals(Color.BLACK)) {
+                } else if (board.getPiece(x, y).color.equals(Color.BLACK)) {
                     mPiecePaint.setColor(android.graphics.Color.BLACK);
                 } else {
                     continue;
@@ -185,10 +185,9 @@ public class GameView extends View {
     private boolean handleClick(int x, int y) {
         board.draw();
         if (board.status == Board.Status.DOWN) {
-            if (board.panel[x][y] == null || board.panel[x][y].color.equals(Color.NULL)) {
+            if (board.getPiece(x, y) == null || board.getPiece(x, y).color.equals(Color.NULL)) {
                 stepCount += currentPlayer.downPiece(new Position(x, y));
                 this.invalidate();
-                board.updateStatus();
                 mainActivity.mStepCount.setText(stepCount + "");
                 if (stepCount > 0) {
                     stepCount--;
