@@ -45,9 +45,27 @@ public class Board implements Cloneable {
         addPiece(new Piece(position, color));
     }
 
-    public void addPiece(Piece piece) {
+    public boolean addPiece(Piece piece) {
+        if (panel[piece.position.x][piece.position.y] != null) {
+            return false;
+        }
         panel[piece.position.x][piece.position.y] = piece;
         updateStatus();
+        return true;
+    }
+
+
+    public void removePiece(Position position, String color) {
+        removePiece(new Piece(position, color));
+    }
+
+    public boolean removePiece(Piece piece) {
+        if (panel[piece.position.x][piece.position.y] == null
+                || !panel[piece.position.x][piece.position.y].color.equals(piece.color)) {
+            return false;
+        }
+        panel[piece.position.x][piece.position.y] = null;
+        return true;
     }
 
     private void updateStatus() {
@@ -112,6 +130,7 @@ public class Board implements Cloneable {
                 }
             }
             newBoard.panel = pieces;
+            newBoard.status = Status.valueOf(status.name());
             return newBoard;
         } catch (CloneNotSupportedException e) {
         } finally {

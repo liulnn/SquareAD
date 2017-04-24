@@ -57,4 +57,21 @@ public class Ai extends Army {
         }
         return position;
     }
+
+    public Position getRemovePosition() {
+        int maxScore = 0;
+        Position position = null;
+        for (int i = 0; i < board.getLength(); i++) {
+            for (int j = 0; j < board.getLength(); j++) {
+                if (board.getPiece(i, j) != null && board.getPiece(i, j).color.equals(color)) {
+                    int steps = board.getPiece(i, j).getSteps();
+                    if (maxScore <= steps) {
+                        maxScore = steps;
+                        position = board.getPiece(i, j).position;
+                    }
+                }
+            }
+        }
+        return position;
+    }
 }

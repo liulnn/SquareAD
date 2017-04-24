@@ -34,6 +34,7 @@ public class GameView extends View {
     public Army rivalPlayer;
     public Army currentPlayer;
     public int stepCount = 0;
+    private int removeCount = 0;
 
     public GameView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -144,7 +145,13 @@ public class GameView extends View {
         }
         if (currentPlayer.isAi) {
             initPanelAndPen();
-            Position p = ((Ai) currentPlayer).getNextPosition();
+            Ai ai = (Ai) currentPlayer;
+            Position p = null;
+            if (board.status == Board.Status.DOWN) {
+                p = ai.getNextPosition();
+            } else if (board.status == Board.Status.REMOVE) {
+                p = ai.getRemovePosition();
+            }
             handleClick(p.x, p.y);
         }
         initPanelAndPen();
@@ -195,8 +202,22 @@ public class GameView extends View {
                 }
                 changePlayer();
             }
+        } else if (board.status == Board.Status.REMOVE) {
+            if (board.getPiece(x, y).color.equals(currentPlayer.color)) {
+                removePiece(x, y);
+            }
+            changePlayer();
         }
         return true;
+    }
+
+    public void removePiece(int x, int y) {
+        currentPlayer.removePiece(new Position(x, y));
+        this.invalidate();
+        removeCount += 1;
+        if (removeCount >= 2) {
+            board.status = Board.Status.FIGHT;
+        }
     }
 
     public enum GameStatus {

@@ -17,10 +17,10 @@ public class Rule {
     public Rule(Army army, Position position) {
         this.army = army;
         this.position = position;
-        army.board.addPiece(position, this.army.color);
     }
 
     public void squares() {
+        army.board.addPiece(position, army.color);
         computeFoursquareSuccess();
         computeLineSuccess();
         computeObliqueSuccess();
@@ -366,4 +366,137 @@ public class Rule {
                 break;
         }
     }
+
+    public void clearSquares() {
+        Piece piece = army.board.getPiece(position);
+        if (piece.squares != null) {
+            for (String square : piece.squares) {
+                switch (square) {
+                    case FiveSquare.WEST_NORTH_SQUARE:
+                        Piece westPiece1 = army.board.getPiece(position.x - 1, position.y);
+                        Piece westNorthPiece1 = army.board.getPiece(position.x - 1, position.y - 1);
+                        Piece northPiece1 = army.board.getPiece(position.x, position.y - 1);
+
+                        piece.deleteSquares(FiveSquare.WEST_NORTH_SQUARE);
+                        westPiece1.deleteSquares(FiveSquare.EAST_NORTH_SQUARE);
+                        westNorthPiece1.deleteSquares(FiveSquare.EAST_SORTH_SQUARE);
+                        northPiece1.deleteSquares(FiveSquare.WEST_SORTH_SQUARE);
+                        break;
+                    case FiveSquare.WEST_SORTH_SQUARE:
+                        Piece westPiece2 = army.board.getPiece(position.x - 1, position.y);
+                        Piece sorthPiece2 = army.board.getPiece(position.x, position.y + 1);
+                        Piece westSorthPiece2 = army.board.getPiece(position.x - 1, position.y + 1);
+
+                        piece.deleteSquares(FiveSquare.WEST_SORTH_SQUARE);
+                        sorthPiece2.deleteSquares(FiveSquare.WEST_NORTH_SQUARE);
+                        westSorthPiece2.deleteSquares(FiveSquare.EAST_NORTH_SQUARE);
+                        westPiece2.deleteSquares(FiveSquare.EAST_SORTH_SQUARE);
+                        break;
+                    case FiveSquare.EAST_NORTH_SQUARE:
+                        Piece northPiece3 = army.board.getPiece(position.x, position.y - 1);
+                        Piece eastNorthPiece3 = army.board.getPiece(position.x + 1, position.y - 1);
+                        Piece eastPiece3 = army.board.getPiece(position.x + 1, position.y);
+
+                        piece.deleteSquares(FiveSquare.EAST_NORTH_SQUARE);
+                        northPiece3.deleteSquares(FiveSquare.EAST_SORTH_SQUARE);
+                        eastNorthPiece3.deleteSquares(FiveSquare.WEST_SORTH_SQUARE);
+                        eastPiece3.deleteSquares(FiveSquare.WEST_NORTH_SQUARE);
+                        break;
+                    case FiveSquare.EAST_SORTH_SQUARE:
+                        Piece eastPiece4 = army.board.getPiece(position.x + 1, position.y);
+                        Piece eastSorthPiece4 = army.board.getPiece(position.x + 1, position.y + 1);
+                        Piece sorthPiece4 = army.board.getPiece(position.x, position.y + 1);
+
+                        piece.deleteSquares(FiveSquare.EAST_SORTH_SQUARE);
+                        eastPiece4.deleteSquares(FiveSquare.WEST_SORTH_SQUARE);
+                        eastSorthPiece4.deleteSquares(FiveSquare.WEST_NORTH_SQUARE);
+                        sorthPiece4.deleteSquares(FiveSquare.EAST_NORTH_SQUARE);
+                        break;
+                    case FiveSquare.SORTH_LAT_LINE:
+                    case FiveSquare.CENTER_LAT_LINE:
+                    case FiveSquare.NORTH_LAT_LINE:
+                        for (int i = 0; i < 5; i++) {
+                            army.board.getPiece(i, position.y).deleteSquares(square);
+                        }
+                        break;
+                    case FiveSquare.EAST_LON_LINE:
+                    case FiveSquare.CENTER_LON_LINE:
+                    case FiveSquare.WEST_LON_LINE:
+                        for (int j = 0; j < 5; j++) {
+                            army.board.getPiece(position.x, j).deleteSquares(square);
+                        }
+                        break;
+                    case FiveSquare.WNES_CENTER_OBLIQUE:
+                    case FiveSquare.WNES_LEFT_FOUR_OBLIQUE:
+                    case FiveSquare.WNES_LEFT_THREE_OBLIQUE:
+                    case FiveSquare.WNES_RIGHT_FOUR_OBLIQUE:
+                    case FiveSquare.WNES_RIGHT_THREE_OBLIQUE:
+                        switch (position.y - position.x) {
+                            case -2:
+                                for (int i = 0; i + 2 <= 4; i++) {
+                                    army.board.getPiece(i + 2, i).deleteSquares(FiveSquare.WNES_RIGHT_THREE_OBLIQUE);
+                                }
+                                break;
+                            case -1:
+                                for (int i = 0; i + 1 <= 4; i++) {
+                                    army.board.getPiece(i + 1, i).deleteSquares(FiveSquare.WNES_RIGHT_FOUR_OBLIQUE);
+                                }
+                                break;
+                            case 0:
+                                for (int i = 0; i <= 4; i++) {
+                                    army.board.getPiece(i, i).deleteSquares(FiveSquare.WNES_CENTER_OBLIQUE);
+                                }
+                                break;
+                            case 1:
+                                for (int i = 0; i + 1 <= 4; i++) {
+                                    army.board.getPiece(i, i + 1).deleteSquares(FiveSquare.WNES_LEFT_FOUR_OBLIQUE);
+                                }
+                                break;
+                            case 2:
+                                for (int i = 0; i + 2 <= 4; i++) {
+                                    army.board.getPiece(i, i + 2).deleteSquares(FiveSquare.WNES_LEFT_THREE_OBLIQUE);
+                                }
+                                break;
+                        }
+                        break;
+                    case FiveSquare.ENWS_CENTER_OBLIQUE:
+                    case FiveSquare.ENWS_LEFT_FOUR_OBLIQUE:
+                    case FiveSquare.ENWS_LEFT_THREE_OBLIQUE:
+                    case FiveSquare.ENWS_RIGHT_FOUR_OBLIQUE:
+                    case FiveSquare.ENWS_RIGHT_THREE_OBLIQUE:
+                        switch (position.y + position.x) {
+                            case 2:
+                                for (int i = 0; 2 - i >= 0; i++) {
+                                    army.board.getPiece(i, 2 - i).deleteSquares(FiveSquare.ENWS_LEFT_THREE_OBLIQUE);
+                                }
+                                break;
+                            case 3:
+                                for (int i = 0; 3 - i >= 0; i++) {
+                                    army.board.getPiece(i, 3 - i).deleteSquares(FiveSquare.ENWS_LEFT_FOUR_OBLIQUE);
+                                }
+                                break;
+                            case 4:
+                                for (int i = 0; 4 - i >= 0; i++) {
+                                    army.board.getPiece(i, 4 - i).deleteSquares(FiveSquare.ENWS_CENTER_OBLIQUE);
+                                }
+                                break;
+                            case 5:
+                                for (int i = 1; 5 - i >= 1; i++) {
+                                    army.board.getPiece(i, 5 - i).deleteSquares(FiveSquare.ENWS_RIGHT_FOUR_OBLIQUE);
+                                }
+                                break;
+                            case 6:
+                                for (int i = 2; 6 - i >= 2; i++) {
+                                    army.board.getPiece(i, 6 - i).deleteSquares(FiveSquare.ENWS_RIGHT_THREE_OBLIQUE);
+                                }
+                                break;
+                        }
+                        break;
+
+                }
+            }
+        }
+        army.board.removePiece(piece);
+    }
+
 }

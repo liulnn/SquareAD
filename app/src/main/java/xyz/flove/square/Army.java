@@ -31,4 +31,10 @@ public abstract class Army {
         new Rule(this, p).squares();
         return board.getPiece(p).getSteps();
     }
+
+
+    public boolean removePiece(Position p) {
+        new Rule(this, p).clearSquares();
+        return true;
+    }
 }
