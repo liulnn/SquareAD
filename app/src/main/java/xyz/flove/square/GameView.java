@@ -34,7 +34,6 @@ public class GameView extends View {
     public Army rivalPlayer;
     public Army currentPlayer;
     public int stepCount = 0;
-    public Position lastChecked;
 
     public GameView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -131,7 +130,7 @@ public class GameView extends View {
                         centerY + mPieceDiameter, centerX - mPieceDiameter,
                         centerY + mPieceDiameter, centerX - mPieceDiameter,
                         centerY - mPieceDiameter};
-                if(board.getPiece(x, y).status == Piece.Status.CHECKED){
+                if (board.getPiece(x, y).status == Piece.Status.CHECKED) {
                     mPiecePaint.setColor(android.graphics.Color.BLUE);
                     canvas.drawLines(aroundRect, mPiecePaint);
                 }
@@ -153,7 +152,13 @@ public class GameView extends View {
                 p = ai.getNextPosition();
             } else if (board.status == Board.Status.REMOVE) {
                 p = ai.getRemovePosition();
-            }else if (board.status == Board.Status.EAT){
+            } else if (board.status == Board.Status.FIGHT) {
+                if (ai.lastChecked == null) {
+                    p = ai.getCheckedPosition();
+                } else {
+                    p = ai.getMovePosition();
+                }
+            } else if (board.status == Board.Status.EAT) {
                 p = ai.getEatPosition();
             }
             handleClick(p.x, p.y);
@@ -196,27 +201,27 @@ public class GameView extends View {
     private boolean handleClick(int x, int y) {
         board.draw();
         if (board.status == Board.Status.DOWN) {
-            if (board.getPiece(x, y) == null || board.getPiece(x, y).color.equals(Color.NULL)) {
-                stepCount += currentPlayer.downPiece(new Position(x, y));
-                this.invalidate();
-                mainActivity.mStepCount.setText(stepCount + "");
-                if (stepCount > 0) {
-                    stepCount--;
-                    return true;
-                }
-                changePlayer();
+            int steps = currentPlayer.downPiece(new Position(x, y));
+            if (steps == -1) {
+                return true;
             }
-        } else if (board.status == Board.Status.REMOVE) {
-            if (board.getPiece(x, y).color.equals(currentPlayer.color)) {
-                boolean removeSuccess = currentPlayer.removePiece(new Position(x, y));
-                if(!removeSuccess){
-                    return true;
-                }
-                this.invalidate();
+            stepCount += steps;
+            this.invalidate();
+            mainActivity.mStepCount.setText(stepCount + "");
+            if (stepCount > 0) {
+                stepCount--;
+                return true;
             }
             changePlayer();
+        } else if (board.status == Board.Status.REMOVE) {
+            boolean removeSuccess = currentPlayer.removePiece(new Position(x, y));
+            if (!removeSuccess) {
+                return true;
+            }
+            this.invalidate();
+            changePlayer();
         } else if (board.status == Board.Status.FIGHT) {
-            if (lastChecked == null) {
+            if (currentPlayer.lastChecked == null) {
                 currentPlayer.checkedPiece(new Position(x, y));
                 this.invalidate();
                 return true;
@@ -233,7 +238,7 @@ public class GameView extends View {
                     this.invalidate();
                     return true;
                 } else {
-                    lastChecked = null;
+                    this.invalidate();
                     changePlayer();
                 }
             }
@@ -243,8 +248,9 @@ public class GameView extends View {
                 if (!eatSuccess) {
                     return true;
                 }
-                stepCount -= 1;
+                stepCount--;
                 mainActivity.mStepCount.setText(stepCount + "");
+                this.invalidate();
                 if (stepCount > 0) {
                     return true;
                 }

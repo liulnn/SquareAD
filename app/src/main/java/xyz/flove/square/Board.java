@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import xyz.flove.square.entities.Color;
 import xyz.flove.square.entities.Position;
+import xyz.flove.square.enums.Direction;
 
 /**
  * Created by liulnn on 17/4/19.
@@ -32,6 +33,40 @@ public class Board implements Cloneable {
         }
         return false;
     }
+
+    public Direction[] getMoveDirection(Position position) {
+        Piece piece = getPiece(position);
+        if (piece == null) {
+            return null;
+        }
+        ArrayList<Direction> directions = new ArrayList<>();
+        if (piece.position.x - 1 >= 0) {
+            Piece westPiece = getPiece(position.x - 1, position.y);
+            if (westPiece == null) {
+                directions.add(Direction.WEST);
+            }
+        }
+        if (piece.position.y - 1 >= 0) {
+            Piece northPiece = getPiece(position.x, position.y - 1);
+            if (northPiece == null) {
+                directions.add(Direction.NORTH);
+            }
+        }
+        if (piece.position.x + 1 <= 4) {
+            Piece eastPiece = getPiece(position.x + 1, position.y);
+            if (eastPiece == null) {
+                directions.add(Direction.EAST);
+            }
+        }
+        if (piece.position.y + 1 <= 4) {
+            Piece sorthPiece = getPiece(position.x, position.y + 1);
+            if (sorthPiece == null) {
+                directions.add(Direction.SORTH);
+            }
+        }
+        return directions.toArray(new Direction[directions.size()]);
+    }
+
 
     public int getLength() {
         return panel[0].length;
@@ -70,8 +105,8 @@ public class Board implements Cloneable {
         }
         panel[piece.position.x][piece.position.y] = null;
         removeCount += 1;
-        if (removeCount >= 2) {
-            status = Board.Status.FIGHT;
+        if (removeCount >= 2 && status == Status.REMOVE) {
+            status = Status.FIGHT;
         }
         return true;
     }
@@ -92,11 +127,11 @@ public class Board implements Cloneable {
         }
     }
 
-    public Position[] getCanEatPieces(String color){
+    public Position[] getCanEatPieces(String color) {
         ArrayList<Position> positions = new ArrayList<>();
         for (int i = 0; i < getLength(); i++) {
             for (int j = 0; j < getLength(); j++) {
-                if(panel[i][j] != null && !panel[i][j].color.equals(color) && !isSquare(new Position(i, j))){
+                if (panel[i][j] != null && !panel[i][j].color.equals(color) && !isSquare(new Position(i, j))) {
                     positions.add(panel[i][j].position);
                 }
             }

@@ -10,6 +10,7 @@ import xyz.flove.square.Board;
 import xyz.flove.square.Rule;
 import xyz.flove.square.entities.Position;
 import xyz.flove.square.entities.Color;
+import xyz.flove.square.enums.Direction;
 
 
 public class Ai extends Army {
@@ -71,6 +72,52 @@ public class Ai extends Army {
                     }
                 }
             }
+        }
+        return position;
+    }
+
+    public Position getCheckedPosition() {
+        Position position = null;
+        for (int i = 0; i < board.getLength(); i++) {
+            for (int j = 0; j < board.getLength(); j++) {
+                Direction[] directions = board.getMoveDirection(new Position(i, j));
+                if (directions != null && directions.length > 0) {
+                    switch (directions[0]) {
+                        case WEST:
+                            position = new Position(i - 1, j);
+                            break;
+                        case EAST:
+                            position = new Position(i + 1, j);
+                            break;
+                        case NORTH:
+                            position = new Position(i, j - 1);
+                            break;
+                        case SORTH:
+                            position = new Position(i, j + 1);
+                            break;
+                    }
+                }
+            }
+        }
+        return position;
+    }
+
+    public Position getMovePosition() {
+        Position position = null;
+        Direction[] directions = board.getMoveDirection(lastChecked);
+        switch (directions[0]) {
+            case WEST:
+                position = new Position(lastChecked.x - 1, lastChecked.y);
+                break;
+            case EAST:
+                position = new Position(lastChecked.x + 1, lastChecked.y);
+                break;
+            case NORTH:
+                position = new Position(lastChecked.x, lastChecked.y - 1);
+                break;
+            case SORTH:
+                position = new Position(lastChecked.x, lastChecked.y + 1);
+                break;
         }
         return position;
     }

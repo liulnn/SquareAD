@@ -77,7 +77,7 @@ public class Piece {
         return steps;
     }
 
-    enum Status{
+    enum Status {
         NULL, CHECKED
     }
 }

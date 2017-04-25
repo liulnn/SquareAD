@@ -137,7 +137,6 @@ public class Rule {
                 latLinePieces[i] = army.board.getPiece(i, position.y);
                 latLineCounter++;
             }
-
         }
         for (int i = 0; i < 5; i++) {
             if (null != army.board.getPiece(position.x, i)
@@ -166,7 +165,7 @@ public class Rule {
             }
         }
         if (lonLineCounter == 5) {
-            switch (position.y) {
+            switch (position.x) {
                 case 1:
                     for (Piece p : lonLinePieces) {
                         p.addSquares(FiveSquare.WEST_LON_LINE);
