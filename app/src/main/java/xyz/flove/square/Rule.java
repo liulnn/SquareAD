@@ -120,9 +120,6 @@ public class Rule {
      * 成拉：放子或走子五棋子在一条线上，横竖匀可（除四条边）。
      */
     private void computeLineSuccess() {
-        if (position.x == 0 || position.x == 4 || position.y == 0 || position.y == 4) {
-            return;
-        }
         Piece piece = army.board.getPiece(position.x, position.y);
 
         Piece[] latLinePieces = new Piece[5];
