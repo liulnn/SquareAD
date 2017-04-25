@@ -6,6 +6,8 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.TextView;
 
+import com.umeng.analytics.MobclickAgent;
+
 public class MainActivity extends Activity implements OnClickListener {
 
     public TextView mPlayer;
@@ -26,5 +28,17 @@ public class MainActivity extends Activity implements OnClickListener {
     public void onClick(View arg0) {
         // TODO Auto-generated method stub
 
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        MobclickAgent.onResume(this);
+    }
+
+    @Override
+    public void onPause(){
+        super.onPause();
+        MobclickAgent.onPause(this);
     }
 }
