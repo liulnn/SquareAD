@@ -13,6 +13,7 @@ import android.support.v4.content.res.ResourcesCompat;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Toast;
 
 public class GameView extends View {
 
@@ -42,8 +43,8 @@ public class GameView extends View {
         this.setFocusableInTouchMode(true);
         this.panelLength = 5;
 
-//        initGame(Color.BLACK, Color.WHITE);
-        initGame(Color.BLACK, Color.WHITE, true);
+        initGame(Color.BLACK, Color.WHITE);
+//        initGame(Color.BLACK, Color.WHITE, true);
     }
 
     public void initGame(String self, String enemy) {
@@ -51,6 +52,7 @@ public class GameView extends View {
         board = new Board(this.panelLength);
         this.mPlayer = new People(board, self);
         this.rivalPlayer = new Ai(board, enemy);
+//        this.rivalPlayer = new People(board, enemy);
         this.currentPlayer = this.mPlayer;
     }
 
@@ -191,8 +193,14 @@ public class GameView extends View {
         }
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
+                if (status == GameStatus.END) {
+                    return true;
+                }
                 boolean flag = handleClick(x, y);
-                board.draw();
+                if (board.isWin(currentPlayer.color)) {
+                    status = GameStatus.END;
+                    Toast.makeText(this.getContext(), currentPlayer.color + " is Win!", Toast.LENGTH_SHORT).show();
+                }
                 return flag;
         }
         return true;
@@ -207,7 +215,7 @@ public class GameView extends View {
             }
             stepCount += steps;
             this.invalidate();
-            mainActivity.mStepCount.setText(stepCount + "");
+            mainActivity.mStepCount.setText(String.valueOf(stepCount));
             if (stepCount > 0) {
                 stepCount--;
                 return true;
@@ -233,7 +241,7 @@ public class GameView extends View {
                 }
                 stepCount += steps;
                 if (stepCount > 0 && board.getCanEatPieces(currentPlayer.color).length > 0) {
-                    mainActivity.mStepCount.setText(stepCount + "");
+                    mainActivity.mStepCount.setText(String.valueOf(stepCount));
                     board.status = Board.Status.EAT;
                     this.invalidate();
                     return true;
@@ -249,7 +257,7 @@ public class GameView extends View {
                     return true;
                 }
                 stepCount--;
-                mainActivity.mStepCount.setText(stepCount + "");
+                mainActivity.mStepCount.setText(String.valueOf(stepCount));
                 this.invalidate();
                 if (stepCount > 0) {
                     return true;
@@ -259,12 +267,6 @@ public class GameView extends View {
             changePlayer();
         }
         return true;
-    }
-
-    public boolean removePiece(int x, int y) {
-        boolean success = currentPlayer.removePiece(new Position(x, y));
-        this.invalidate();
-        return success;
     }
 
     public enum GameStatus {

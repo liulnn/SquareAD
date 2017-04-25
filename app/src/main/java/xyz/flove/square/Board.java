@@ -22,7 +22,7 @@ public class Board implements Cloneable {
     }
 
     enum Status {
-        // 下子阶段，提子阶段，对战阶段（吃子）
+        // 下子阶段，提子阶段，对战阶段（吃子），结束
         DOWN, REMOVE, FIGHT, EAT
     }
 
@@ -137,6 +137,17 @@ public class Board implements Cloneable {
             }
         }
         return positions.toArray(new Position[positions.size()]);
+    }
+
+    public boolean isWin(String color) {
+        for (int i = 0; i < getLength(); i++) {
+            for (int j = 0; j < getLength(); j++) {
+                if (panel[i][j] != null && !panel[i][j].color.equals(color)) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 
     public void draw() {
