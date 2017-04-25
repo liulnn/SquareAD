@@ -74,4 +74,9 @@ public class Ai extends Army {
         }
         return position;
     }
+
+    public Position getEatPosition() {
+        Position[] positions = board.getCanEatPieces(color);
+        return positions[0];
+    }
 }

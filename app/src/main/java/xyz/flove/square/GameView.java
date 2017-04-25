@@ -34,7 +34,7 @@ public class GameView extends View {
     public Army rivalPlayer;
     public Army currentPlayer;
     public int stepCount = 0;
-    private int removeCount = 0;
+    public Position lastChecked;
 
     public GameView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -43,30 +43,29 @@ public class GameView extends View {
         this.setFocusableInTouchMode(true);
         this.panelLength = 5;
 
-        initGame(Color.BLACK, Color.WHITE);
-        // initGame(Color.BLACK, Color.WHITE, true);
+//        initGame(Color.BLACK, Color.WHITE);
+        initGame(Color.BLACK, Color.WHITE, true);
     }
 
-    public void initGame(String first, String second) {
+    public void initGame(String self, String enemy) {
         status = GameStatus.START;
         board = new Board(this.panelLength);
-        this.mPlayer = new People(board, first);
-        this.rivalPlayer = new Ai(board, second);
+        this.mPlayer = new People(board, self);
+        this.rivalPlayer = new Ai(board, enemy);
         this.currentPlayer = this.mPlayer;
     }
 
-    public void initGame(String first, String second, boolean remove) {
-        initGame(first, second);
+    public void initGame(String self, String enemy, boolean remove) {
+        initGame(self, enemy);
         if (remove) {// 直接进入提子阶段
             for (int i = 0; i < this.panelLength; i++) {
                 for (int j = 0; j < this.panelLength; j++) {
                     int xx = (int) (Math.random() * 2);
                     if (xx == 1) {
-                        board.getPiece(i, j).color = Color.BLACK;
+                        board.addPiece(new Position(i, j), Color.BLACK);
                     } else {
-                        board.getPiece(i, j).color = Color.WHITE;
+                        board.addPiece(new Position(i, j), Color.WHITE);
                     }
-
                 }
             }
             board.status = Board.Status.REMOVE;
@@ -132,10 +131,13 @@ public class GameView extends View {
                         centerY + mPieceDiameter, centerX - mPieceDiameter,
                         centerY + mPieceDiameter, centerX - mPieceDiameter,
                         centerY - mPieceDiameter};
+                if(board.getPiece(x, y).status == Piece.Status.CHECKED){
+                    mPiecePaint.setColor(android.graphics.Color.BLUE);
+                    canvas.drawLines(aroundRect, mPiecePaint);
+                }
             }
         }
     }
-
 
     public void changePlayer() {
         if (currentPlayer.equals(mPlayer)) {
@@ -151,6 +153,8 @@ public class GameView extends View {
                 p = ai.getNextPosition();
             } else if (board.status == Board.Status.REMOVE) {
                 p = ai.getRemovePosition();
+            }else if (board.status == Board.Status.EAT){
+                p = ai.getEatPosition();
             }
             handleClick(p.x, p.y);
         }
@@ -204,20 +208,57 @@ public class GameView extends View {
             }
         } else if (board.status == Board.Status.REMOVE) {
             if (board.getPiece(x, y).color.equals(currentPlayer.color)) {
-                removePiece(x, y);
+                boolean removeSuccess = currentPlayer.removePiece(new Position(x, y));
+                if(!removeSuccess){
+                    return true;
+                }
+                this.invalidate();
             }
+            changePlayer();
+        } else if (board.status == Board.Status.FIGHT) {
+            if (lastChecked == null) {
+                currentPlayer.checkedPiece(new Position(x, y));
+                this.invalidate();
+                return true;
+            } else {
+                int steps = currentPlayer.movePiece(new Position(x, y));
+                if (steps == -1) {
+                    this.invalidate();
+                    return true;
+                }
+                stepCount += steps;
+                if (stepCount > 0 && board.getCanEatPieces(currentPlayer.color).length > 0) {
+                    mainActivity.mStepCount.setText(stepCount + "");
+                    board.status = Board.Status.EAT;
+                    this.invalidate();
+                    return true;
+                } else {
+                    lastChecked = null;
+                    changePlayer();
+                }
+            }
+        } else if (board.status == Board.Status.EAT) {
+            if (stepCount > 0) {
+                boolean eatSuccess = currentPlayer.eatPiece(new Position(x, y));
+                if (!eatSuccess) {
+                    return true;
+                }
+                stepCount -= 1;
+                mainActivity.mStepCount.setText(stepCount + "");
+                if (stepCount > 0) {
+                    return true;
+                }
+            }
+            board.status = Board.Status.FIGHT;
             changePlayer();
         }
         return true;
     }
 
-    public void removePiece(int x, int y) {
-        currentPlayer.removePiece(new Position(x, y));
+    public boolean removePiece(int x, int y) {
+        boolean success = currentPlayer.removePiece(new Position(x, y));
         this.invalidate();
-        removeCount += 1;
-        if (removeCount >= 2) {
-            board.status = Board.Status.FIGHT;
-        }
+        return success;
     }
 
     public enum GameStatus {

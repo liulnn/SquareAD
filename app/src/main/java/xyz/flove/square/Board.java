@@ -1,5 +1,7 @@
 package xyz.flove.square;
 
+import java.util.ArrayList;
+
 import xyz.flove.square.entities.Color;
 import xyz.flove.square.entities.Position;
 
@@ -10,15 +12,17 @@ import xyz.flove.square.entities.Position;
 public class Board implements Cloneable {
     public Status status;
     private Piece[][] panel;
+    private int removeCount;
 
     public Board(int size) {
         panel = new Piece[size][size];
         status = Status.DOWN;
+        removeCount = 0;
     }
 
     enum Status {
-        // 下子阶段，提子阶段，对战阶段（选中，移动，吃子）
-        DOWN, REMOVE, FIGHT, CHECKED, MOVE, EAT;
+        // 下子阶段，提子阶段，对战阶段（吃子）
+        DOWN, REMOVE, FIGHT, EAT
     }
 
     public boolean isSquare(Position position) {
@@ -65,6 +69,10 @@ public class Board implements Cloneable {
             return false;
         }
         panel[piece.position.x][piece.position.y] = null;
+        removeCount += 1;
+        if (removeCount >= 2) {
+            status = Board.Status.FIGHT;
+        }
         return true;
     }
 
@@ -84,11 +92,22 @@ public class Board implements Cloneable {
         }
     }
 
+    public Position[] getCanEatPieces(String color){
+        ArrayList<Position> positions = new ArrayList<>();
+        for (int i = 0; i < getLength(); i++) {
+            for (int j = 0; j < getLength(); j++) {
+                if(panel[i][j] != null && !panel[i][j].color.equals(color) && !isSquare(new Position(i, j))){
+                    positions.add(panel[i][j].position);
+                }
+            }
+        }
+        return positions.toArray(new Position[positions.size()]);
+    }
+
     public void draw() {
         System.out.println("--------------------------------");
         for (int i = 0; i < getLength(); i++) {
             for (int j = 0; j < getLength(); j++) {
-
                 String color = Color.NULL;
                 if (panel[j][i] != null) {
                     color = panel[j][i].color;

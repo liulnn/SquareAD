@@ -14,10 +14,12 @@ public class Piece {
     public Position position;
     public String color;
     public String[] squares;
+    public Status status;
 
     public Piece(Position position, String color) {
         this.position = position;
         this.color = color;
+        this.status = Status.NULL;
     }
 
     public void addSquares(String square) {
@@ -73,5 +75,9 @@ public class Piece {
             }
         }
         return steps;
+    }
+
+    enum Status{
+        NULL, CHECKED
     }
 }
