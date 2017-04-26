@@ -140,7 +140,7 @@ public class GameView extends View {
         }
     }
 
-    public void changePlayer() {
+    synchronized public void changePlayer() {
         if (currentPlayer.equals(mPlayer)) {
             currentPlayer = rivalPlayer;
         } else {
@@ -184,6 +184,9 @@ public class GameView extends View {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
+        if (status == GameStatus.END) {
+            return true;
+        }
         float touchX = event.getX();
         float touchy = event.getY();
         int x = (int) (touchX / mBoardLineUnit);
@@ -193,13 +196,20 @@ public class GameView extends View {
         }
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
-                if (status == GameStatus.END) {
-                    return true;
-                }
                 boolean flag = handleClick(x, y);
-                if (board.isWin(currentPlayer.color)) {
-                    status = GameStatus.END;
-                    Toast.makeText(this.getContext(), currentPlayer.color + " is Win!", Toast.LENGTH_SHORT).show();
+                switch (board.getResult(currentPlayer.color)) {
+                    case WINNER:
+                        status = GameStatus.END;
+                        Toast.makeText(this.getContext(), currentPlayer.color + " is Win!", Toast.LENGTH_SHORT).show();
+                        break;
+                    case LOSER:
+                        status = GameStatus.END;
+                        if (currentPlayer.equals(mPlayer)) {
+                            Toast.makeText(this.getContext(), mPlayer.color + " is Win!", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(this.getContext(), rivalPlayer.color + " is Win!", Toast.LENGTH_SHORT).show();
+                        }
+                        break;
                 }
                 return flag;
         }

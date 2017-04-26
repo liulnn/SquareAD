@@ -21,8 +21,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <meta-data android:value="YOUR_APP_KEY" android:name="58ff4e8a5312dd4add001cd6"/>
-        <meta-data android:value="Channel ID" android:name="default"/>
+        <meta-data android:value="58ff4e8a5312dd4add001cd6" android:name="UMENG_APPKEY"/>
+        <meta-data android:value="default" android:name="UMENG_CHANNEL"/>
     </application>
 
 </manifest>

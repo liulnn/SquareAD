@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import xyz.flove.square.entities.Color;
 import xyz.flove.square.entities.Position;
 import xyz.flove.square.enums.Direction;
+import xyz.flove.square.enums.Result;
 
 /**
  * Created by liulnn on 17/4/19.
@@ -139,15 +140,42 @@ public class Board implements Cloneable {
         return positions.toArray(new Position[positions.size()]);
     }
 
-    public boolean isWin(String color) {
+    public boolean isLazy(String color) {
+        return false;
+    }
+
+    public Result getResult(String color) {
+        if (status == Status.DOWN || status == Status.REMOVE) {
+            return Result.NULL;
+        }
+        int enemyPieceCount = 0;
+        int enemyCanMovePieceCount = 0;
         for (int i = 0; i < getLength(); i++) {
             for (int j = 0; j < getLength(); j++) {
-                if (panel[i][j] != null && !panel[i][j].color.equals(color)) {
-                    return false;
+                Piece piece = panel[i][j];
+                Direction[] directions = getMoveDirection(new Position(i, j));
+                if (piece != null && !piece.color.equals(color)) {
+                    enemyPieceCount += 1;
+                    if (directions != null && directions.length > 0) {
+                        enemyCanMovePieceCount += 1;
+                    }
                 }
             }
         }
-        return true;
+        //对方棋子少于3个
+        if (enemyPieceCount < 3) {
+            return Result.WINNER;
+        }
+        //对方没有可以移动的棋子
+        if (enemyCanMovePieceCount == 0) {
+            return Result.WINNER;
+        }
+
+        //己方是否是懒棋
+        if (isLazy(color)) {
+            return Result.LOSER;
+        }
+        return Result.NULL;
     }
 
     public void draw() {
