@@ -140,11 +140,14 @@ public class Board implements Cloneable {
         return positions.toArray(new Position[positions.size()]);
     }
 
-    public boolean isLazy(String color){
+    public boolean isLazy(String color) {
         return false;
     }
 
     public Result getResult(String color) {
+        if (status == Status.DOWN || status == Status.REMOVE) {
+            return Result.NULL;
+        }
         int enemyPieceCount = 0;
         int enemyCanMovePieceCount = 0;
         for (int i = 0; i < getLength(); i++) {
@@ -153,9 +156,9 @@ public class Board implements Cloneable {
                 Direction[] directions = getMoveDirection(new Position(i, j));
                 if (piece != null && !piece.color.equals(color)) {
                     enemyPieceCount += 1;
-                }
-                if (directions != null && directions.length > 0) {
-                    enemyCanMovePieceCount += 1;
+                    if (directions != null && directions.length > 0) {
+                        enemyCanMovePieceCount += 1;
+                    }
                 }
             }
         }
@@ -169,7 +172,7 @@ public class Board implements Cloneable {
         }
 
         //己方是否是懒棋
-        if(isLazy(color)){
+        if (isLazy(color)) {
             return Result.LOSER;
         }
         return Result.NULL;

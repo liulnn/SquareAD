@@ -141,7 +141,7 @@ public class GameView extends View {
         }
     }
 
-    public void changePlayer() {
+    synchronized public void changePlayer() {
         if (currentPlayer.equals(mPlayer)) {
             currentPlayer = rivalPlayer;
         } else {
@@ -185,6 +185,9 @@ public class GameView extends View {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
+        if (status == GameStatus.END) {
+            return true;
+        }
         float touchX = event.getX();
         float touchy = event.getY();
         int x = (int) (touchX / mBoardLineUnit);
@@ -194,9 +197,6 @@ public class GameView extends View {
         }
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
-                if (status == GameStatus.END) {
-                    return true;
-                }
                 boolean flag = handleClick(x, y);
                 switch (board.getResult(currentPlayer.color)) {
                     case WINNER:

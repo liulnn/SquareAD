@@ -36,7 +36,7 @@ public abstract class Army {
 
 
     public boolean removePiece(Position p) {
-        if (!board.getPiece(p).color.equals(color)) {
+        if (board.getPiece(p) == null || !board.getPiece(p).color.equals(color)) {
             return false;
         }
         new Rule(this, p).clearSquares();
@@ -61,6 +61,11 @@ public abstract class Army {
             return -1;
         }
         if (board.getPiece(destPosition) != null) {
+            board.getPiece(lastChecked).status = Piece.Status.NULL;
+            lastChecked = null;
+            return -1;
+        }
+        if(Math.abs(destPosition.x - lastChecked.x) + Math.abs(destPosition.y - lastChecked.y) > 1){
             board.getPiece(lastChecked).status = Piece.Status.NULL;
             lastChecked = null;
             return -1;
