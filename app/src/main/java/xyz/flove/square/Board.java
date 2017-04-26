@@ -142,7 +142,10 @@ public class Board implements Cloneable {
     public boolean isWin(String color) {
         for (int i = 0; i < getLength(); i++) {
             for (int j = 0; j < getLength(); j++) {
-                if (panel[i][j] != null && !panel[i][j].color.equals(color)) {
+                Piece piece = panel[i][j];
+                Direction[] directions = getMoveDirection(new Position(i, j));
+                // 棋盘上有对手的棋子，并且可以走动
+                if (piece != null && !piece.color.equals(color) && directions != null && directions.length > 0) {
                     return false;
                 }
             }
