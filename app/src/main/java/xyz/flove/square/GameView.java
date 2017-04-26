@@ -2,6 +2,7 @@ package xyz.flove.square;
 
 import xyz.flove.square.entities.Color;
 import xyz.flove.square.entities.Position;
+import xyz.flove.square.enums.Result;
 import xyz.flove.square.roles.Ai;
 import xyz.flove.square.roles.People;
 
@@ -197,9 +198,19 @@ public class GameView extends View {
                     return true;
                 }
                 boolean flag = handleClick(x, y);
-                if (board.isWin(currentPlayer.color)) {
-                    status = GameStatus.END;
-                    Toast.makeText(this.getContext(), currentPlayer.color + " is Win!", Toast.LENGTH_SHORT).show();
+                switch (board.getResult(currentPlayer.color)) {
+                    case WINNER:
+                        status = GameStatus.END;
+                        Toast.makeText(this.getContext(), currentPlayer.color + " is Win!", Toast.LENGTH_SHORT).show();
+                        break;
+                    case LOSER:
+                        status = GameStatus.END;
+                        if (currentPlayer.equals(mPlayer)) {
+                            Toast.makeText(this.getContext(), mPlayer.color + " is Win!", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(this.getContext(), rivalPlayer.color + " is Win!", Toast.LENGTH_SHORT).show();
+                        }
+                        break;
                 }
                 return flag;
         }
