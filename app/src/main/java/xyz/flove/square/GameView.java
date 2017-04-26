@@ -2,7 +2,6 @@ package xyz.flove.square;
 
 import xyz.flove.square.entities.Color;
 import xyz.flove.square.entities.Position;
-import xyz.flove.square.enums.Result;
 import xyz.flove.square.roles.Ai;
 import xyz.flove.square.roles.People;
 
