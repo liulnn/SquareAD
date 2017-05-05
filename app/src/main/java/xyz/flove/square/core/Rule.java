@@ -1,12 +1,12 @@
-package xyz.flove.square;
+package xyz.flove.square.core;
 
 
 /**
  * Created by liulnn on 17/4/20.
  */
 
-import xyz.flove.square.entities.Position;
-import xyz.flove.square.entities.FiveSquare;
+import xyz.flove.square.core.entities.Position;
+import xyz.flove.square.core.entities.FiveSquare;
 
 
 public class Rule {

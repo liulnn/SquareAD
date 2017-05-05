@@ -1,11 +1,11 @@
-package xyz.flove.square;
+package xyz.flove.square.core;
 
 import java.util.ArrayList;
 
-import xyz.flove.square.entities.Color;
-import xyz.flove.square.entities.Position;
-import xyz.flove.square.enums.Direction;
-import xyz.flove.square.enums.Result;
+import xyz.flove.square.core.entities.Color;
+import xyz.flove.square.core.entities.Position;
+import xyz.flove.square.core.enums.Direction;
+import xyz.flove.square.core.enums.Result;
 
 /**
  * Created by liulnn on 17/4/19.
@@ -22,7 +22,7 @@ public class Board implements Cloneable {
         removeCount = 0;
     }
 
-    enum Status {
+    public enum Status {
         // 下子阶段，提子阶段，对战阶段（吃子），结束
         DOWN, REMOVE, FIGHT, EAT
     }

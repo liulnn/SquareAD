@@ -1,12 +1,11 @@
-package xyz.flove.square;
+package xyz.flove.square.core;
 
 /**
  * Created by liulnn on 17/4/19.
  */
 
-import xyz.flove.square.entities.Color;
-import xyz.flove.square.entities.Position;
-import xyz.flove.square.enums.Direction;
+import xyz.flove.square.core.entities.Color;
+import xyz.flove.square.core.entities.Position;
 
 
 public abstract class Army {
@@ -65,7 +64,7 @@ public abstract class Army {
             lastChecked = null;
             return -1;
         }
-        if(Math.abs(destPosition.x - lastChecked.x) + Math.abs(destPosition.y - lastChecked.y) > 1){
+        if (Math.abs(destPosition.x - lastChecked.x) + Math.abs(destPosition.y - lastChecked.y) > 1) {
             board.getPiece(lastChecked).status = Piece.Status.NULL;
             lastChecked = null;
             return -1;

@@ -1,4 +1,4 @@
-package xyz.flove.square.entities;
+package xyz.flove.square.core.entities;
 
 public class Color {
     public static final String NULL = "NULL";

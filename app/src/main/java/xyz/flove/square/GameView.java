@@ -1,9 +1,12 @@
 package xyz.flove.square;
 
-import xyz.flove.square.entities.Color;
-import xyz.flove.square.entities.Position;
-import xyz.flove.square.roles.Ai;
-import xyz.flove.square.roles.People;
+import xyz.flove.square.core.Army;
+import xyz.flove.square.core.Board;
+import xyz.flove.square.core.Piece;
+import xyz.flove.square.core.entities.Color;
+import xyz.flove.square.core.entities.Position;
+import xyz.flove.square.core.roles.Ai;
+import xyz.flove.square.core.roles.People;
 
 import android.content.Context;
 import android.graphics.Canvas;

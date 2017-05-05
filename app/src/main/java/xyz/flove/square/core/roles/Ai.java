@@ -1,16 +1,16 @@
-package xyz.flove.square.roles;
+package xyz.flove.square.core.roles;
 
 
 /**
  * Created by liulnn on 17/4/20.
  */
 
-import xyz.flove.square.Army;
-import xyz.flove.square.Board;
-import xyz.flove.square.Rule;
-import xyz.flove.square.entities.Position;
-import xyz.flove.square.entities.Color;
-import xyz.flove.square.enums.Direction;
+import xyz.flove.square.core.Army;
+import xyz.flove.square.core.Board;
+import xyz.flove.square.core.Rule;
+import xyz.flove.square.core.entities.Position;
+import xyz.flove.square.core.entities.Color;
+import xyz.flove.square.core.enums.Direction;
 
 
 public class Ai extends Army {

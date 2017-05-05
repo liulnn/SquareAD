@@ -1,12 +1,12 @@
-package xyz.flove.square.roles;
+package xyz.flove.square.core.roles;
 
 
 /**
  * Created by liulnn on 17/4/20.
  */
 
-import xyz.flove.square.Army;
-import xyz.flove.square.Board;
+import xyz.flove.square.core.Army;
+import xyz.flove.square.core.Board;
 
 
 public class People extends Army {

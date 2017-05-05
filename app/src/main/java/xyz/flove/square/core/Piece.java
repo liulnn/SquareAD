@@ -1,4 +1,4 @@
-package xyz.flove.square;
+package xyz.flove.square.core;
 
 
 /**
@@ -7,8 +7,8 @@ package xyz.flove.square;
 
 import java.util.ArrayList;
 
-import xyz.flove.square.entities.Position;
-import xyz.flove.square.entities.FiveSquare;
+import xyz.flove.square.core.entities.Position;
+import xyz.flove.square.core.entities.FiveSquare;
 
 public class Piece {
     public Position position;
@@ -77,7 +77,7 @@ public class Piece {
         return steps;
     }
 
-    enum Status {
+    public enum Status {
         NULL, CHECKED
     }
 }

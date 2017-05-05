@@ -1,4 +1,4 @@
-package xyz.flove.square.enums;
+package xyz.flove.square.core.enums;
 
 public enum Direction {
     WEST, NORTH, EAST, SORTH

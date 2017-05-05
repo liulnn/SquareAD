@@ -1,4 +1,4 @@
-package xyz.flove.square.entities;
+package xyz.flove.square.core.entities;
 
 /**
  * Created by liulnn on 17/4/19.
