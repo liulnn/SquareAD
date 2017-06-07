@@ -1,7 +1,7 @@
 package xyz.flove.square
 
 import xyz.flove.square.core.Position
-import xyz.flove.square.five.FiveSquare
+import xyz.flove.square.core.FiveSquare
 
 
 class Rule(private val army: Army, private val position: Position) {
@@ -24,35 +24,35 @@ class Rule(private val army: Army, private val position: Position) {
         // 子的方位：中，西，西北，北，东北，东，东南，南，西南
         val piece = army.board.getPiece(position.x, position.y)
         var westPiece: Piece? = null
-        if (piece!!.position!!.x - 1 >= 0) {
+        if (piece!!.position.x - 1 >= 0) {
             westPiece = army.board.getPiece(position.x - 1, position.y)
         }
         var westNorthPiece: Piece? = null
-        if (piece.position!!.x - 1 >= 0 && piece.position!!.y - 1 >= 0) {
+        if (piece.position.x - 1 >= 0 && piece.position.y - 1 >= 0) {
             westNorthPiece = army.board.getPiece(position.x - 1, position.y - 1)
         }
         var northPiece: Piece? = null
-        if (piece.position!!.y - 1 >= 0) {
+        if (piece.position.y - 1 >= 0) {
             northPiece = army.board.getPiece(position.x, position.y - 1)
         }
         var eastNorthPiece: Piece? = null
-        if (piece.position!!.x + 1 <= 4 && piece.position!!.y - 1 >= 0) {
+        if (piece.position.x + 1 <= 4 && piece.position.y - 1 >= 0) {
             eastNorthPiece = army.board.getPiece(position.x + 1, position.y - 1)
         }
         var eastPiece: Piece? = null
-        if (piece.position!!.x + 1 <= 4) {
+        if (piece.position.x + 1 <= 4) {
             eastPiece = army.board.getPiece(position.x + 1, position.y)
         }
         var eastSorthPiece: Piece? = null
-        if (piece.position!!.x + 1 <= 4 && piece.position!!.y + 1 <= 4) {
+        if (piece.position.x + 1 <= 4 && piece.position.y + 1 <= 4) {
             eastSorthPiece = army.board.getPiece(position.x + 1, position.y + 1)
         }
         var sorthPiece: Piece? = null
-        if (piece.position!!.y + 1 <= 4) {
+        if (piece.position.y + 1 <= 4) {
             sorthPiece = army.board.getPiece(position.x, position.y + 1)
         }
         var westSorthPiece: Piece? = null
-        if (piece.position!!.x - 1 >= 0 && piece.position!!.y + 1 <= 4) {
+        if (piece.position.x - 1 >= 0 && piece.position.y + 1 <= 4) {
             westSorthPiece = army.board.getPiece(position.x - 1, position.y + 1)
         }
 

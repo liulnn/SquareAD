@@ -1,4 +1,4 @@
-package xyz.flove.square.five
+package xyz.flove.square.core
 
 /**
  * 方：西北方，西南方，东北方，东南方

@@ -45,7 +45,7 @@ class GameView(context: Context, attrs: AttributeSet) : View(context, attrs) {
 
     fun initGame(self: Color, enemy: Color) {
         status = GameStatus.START
-        board = Board(this.panelLength)
+        board = Board(Array<Array<Piece?>?>(this.panelLength, { null }))
         this.mPlayer = People(board!!, self) as Army
         this.rivalPlayer = Ai(board!!, enemy)
         //        this.rivalPlayer = new People(board, enemy);
@@ -220,7 +220,7 @@ class GameView(context: Context, attrs: AttributeSet) : View(context, attrs) {
                     return true
                 }
                 stepCount += steps
-                if (stepCount > 0 && board!!.getCanEatPieces(currentPlayer!!.color).isNotEmpty()) {
+                if (stepCount > 0 && board!!.getCanEatPieces(currentPlayer!!.color)!!.isNotEmpty()) {
                     mainActivity!!.mStepCount!!.text = stepCount.toString()
                     board!!.status = BoardStatus.EAT
                     this.invalidate()

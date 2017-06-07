@@ -102,6 +102,9 @@ class Ai(board: Board, color: Color) : Army(board, color, true) {
     val eatPosition: Position?
         get() {
             val positions = board.getCanEatPieces(color)
-            return positions[0]
+            if (positions != null) {
+                return positions[0]
+            }
+            return null
         }
 }

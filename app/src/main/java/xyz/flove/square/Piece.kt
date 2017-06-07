@@ -3,18 +3,14 @@ package xyz.flove.square
 import xyz.flove.square.core.Color
 import xyz.flove.square.core.PieceStatus
 import xyz.flove.square.core.Position
-import xyz.flove.square.five.FiveSquare
+import xyz.flove.square.core.FiveSquare
 
 
-class Piece(position: Position, color: Color) {
-    var position: Position? = null
-    var color: Color? = null
+class Piece(var position: Position, var color: Color) {
     var squares: List<FiveSquare>? = null
     var status: PieceStatus? = null
 
     init {
-        this.position = position
-        this.color = color
         this.status = PieceStatus.NULL
     }
 
@@ -26,7 +22,7 @@ class Piece(position: Position, color: Color) {
             }
         }
         oldSquares!!.add(square)
-        squares = oldSquares.toList()
+        squares = oldSquares
     }
 
     fun deleteSquares(square: FiveSquare) {
@@ -35,7 +31,7 @@ class Piece(position: Position, color: Color) {
             oldSquares!!.add(s)
         }
         oldSquares!!.remove(square)
-        squares = oldSquares.toList()
+        squares = oldSquares
     }
 
     fun getSteps(): Int {
