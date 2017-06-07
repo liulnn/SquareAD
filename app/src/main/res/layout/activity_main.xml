@@ -15,19 +15,19 @@
             android:layout_height="wrap_content"
             android:drawableRight="@drawable/black"
             android:text="@string/game_player" />
-        
+
         <TextView
             android:id="@+id/stepCountLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/square_count" />
-        
+
         <TextView
             android:id="@+id/stepCount"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/default_square_count" />
-        
+
     </LinearLayout>
 
     <xyz.flove.square.GameView
