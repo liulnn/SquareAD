@@ -3,7 +3,7 @@ package xyz.flove.square
 import xyz.flove.square.core.*
 
 
-class Board(var panel: Array<Array<Piece?>?>) : Cloneable {
+class Board(var panel: Array<Array<Piece?>>) : Cloneable {
     var size: Int = panel.size
     var status: BoardStatus? = null
     private var removeCount: Int = 0
@@ -14,39 +14,46 @@ class Board(var panel: Array<Array<Piece?>?>) : Cloneable {
     }
 
 
-    fun isSquare(position: Position): Boolean {
-        val piece = getPiece(position)
-        if (piece!!.squares != null && piece.squares!!.isNotEmpty()) {
+    fun isSquare(piece: Piece): Boolean {
+        if (piece.squares.isNotEmpty()) {
             return true
         }
         return false
     }
 
-    fun getMoveDirection(position: Position): List<Direction>? {
-        val piece = getPiece(position) ?: return null
-        val directions: MutableList<Direction>? = null
+    fun isSquare(position: Position): Boolean {
+        val piece = getPiece(position)
+        if (piece != null) {
+            return isSquare(piece)
+        }
+        return false
+    }
+
+    fun getMoveDirection(position: Position): List<Direction> {
+        val directions: MutableList<Direction> = ArrayList()
+        val piece = getPiece(position) ?: return directions
         if (piece.position.x - 1 >= 0) {
             val westPiece = getPiece(position.x - 1, position.y)
             if (westPiece == null) {
-                directions!!.add(Direction.WEST)
+                directions.add(Direction.WEST)
             }
         }
         if (piece.position.y - 1 >= 0) {
             val northPiece = getPiece(position.x, position.y - 1)
             if (northPiece == null) {
-                directions!!.add(Direction.NORTH)
+                directions.add(Direction.NORTH)
             }
         }
         if (piece.position.x + 1 <= 4) {
             val eastPiece = getPiece(position.x + 1, position.y)
             if (eastPiece == null) {
-                directions!!.add(Direction.EAST)
+                directions.add(Direction.EAST)
             }
         }
         if (piece.position.y + 1 <= 4) {
             val sorthPiece = getPiece(position.x, position.y + 1)
             if (sorthPiece == null) {
-                directions!!.add(Direction.SORTH)
+                directions.add(Direction.SORTH)
             }
         }
         return directions
@@ -57,38 +64,33 @@ class Board(var panel: Array<Array<Piece?>?>) : Cloneable {
         get() = this.size
 
     fun getPiece(position: Position): Piece? {
-        if (panel[position.x] != null) {
-            return panel[position.x]!![position.y]
-        }
-        return null
+        return panel[position.x][position.y]
     }
 
     fun getPiece(x: Int, y: Int): Piece? {
-        if (panel[x] != null) {
-            return panel[x]!![y]
-        }
-        return null
+        return panel[x][y]
     }
 
-    fun addPiece(position: Position, color: Color) {
-        addPiece(Piece(position, color))
+    fun addPiece(position: Position, color: Color): Boolean {
+        var piece: Piece = Piece(position, color)
+        return addPiece(piece)
     }
 
     fun addPiece(piece: Piece): Boolean {
-        if (panel[piece.position.x]!![piece.position.y] != null) {
+        if (panel[piece.position.x][piece.position.y] != null) {
             return false
         }
-        panel[piece.position.x]!![piece.position.y] = piece
+        panel[piece.position.x][piece.position.y] = piece
         updateStatus()
         return true
     }
 
     fun removePiece(piece: Piece): Boolean {
-        if (panel[piece.position.x]!![piece.position.y] == null
-                || panel[piece.position.x]!![piece.position.y]!!.color != piece.color) {
+        if (panel[piece.position.x][piece.position.y] == null
+                || panel[piece.position.x][piece.position.y]!!.color != piece.color) {
             return false
         }
-        panel[piece.position.x]!![piece.position.y] = null
+        panel[piece.position.x][piece.position.y] = null
         removeCount += 1
         if (removeCount >= 2 && status == BoardStatus.REMOVE) {
             status = BoardStatus.FIGHT
@@ -107,7 +109,7 @@ class Board(var panel: Array<Array<Piece?>?>) : Cloneable {
 
     fun isFull(): Boolean {
         for (i in 0..length - 1) {
-            panel[i]!!.asList().forEach {
+            panel[i].asList().forEach {
                 if (it == null || it.color == Color.NULL) return false
             }
         }
@@ -115,13 +117,12 @@ class Board(var panel: Array<Array<Piece?>?>) : Cloneable {
     }
 
 
-    fun getCanEatPieces(color: Color): List<Position>? {
-        val positions: MutableList<Position>? = null
+    fun getCanEatPieces(color: Color): List<Position> {
+        val positions: MutableList<Position> = ArrayList()
         for (i in 0..length - 1) {
-            for (j in 0..length - 1) {
-                if (panel[i]!![j] != null && panel[i]!![j]!!.color != color && !isSquare(Position(i, j))) {
-                    positions!!.add(panel[i]!![j]!!.position)
-                }
+            panel[i].forEach {
+                if (it != null && it.color != color && !isSquare(it))
+                    positions.add(it.position)
             }
         }
         return positions
@@ -139,11 +140,11 @@ class Board(var panel: Array<Array<Piece?>?>) : Cloneable {
         var enemyCanMovePieceCount = 0
         for (i in 0..length - 1) {
             for (j in 0..length - 1) {
-                val piece = panel[i]!![j]
+                val piece = panel[i][j]
                 val directions = getMoveDirection(Position(i, j))
-                if (piece!!.color != color) {
+                if (piece != null && piece.color != color) {
                     enemyPieceCount += 1
-                    if (directions != null && directions.isNotEmpty()) {
+                    if (directions.isNotEmpty()) {
                         enemyCanMovePieceCount += 1
                     }
                 }
@@ -170,8 +171,8 @@ class Board(var panel: Array<Array<Piece?>?>) : Cloneable {
         for (i in 0..length - 1) {
             for (j in 0..length - 1) {
                 var color = Color.NULL
-                if (panel[j] != null && panel[j]!![i] != null) {
-                    color = panel[j]!![i]!!.color
+                if (panel[j][i] != null) {
+                    color = panel[j][i]!!.color
                 }
                 if (color == Color.BLACK) {
                     print("[*]")
@@ -196,15 +197,15 @@ class Board(var panel: Array<Array<Piece?>?>) : Cloneable {
         }
     }
 
-    public override fun clone(): xyz.flove.square.Board {
-        var newBoard: xyz.flove.square.Board = this
+    public override fun clone(): Board {
+        var newBoard: Board = this
+        val pieces: Array<Array<Piece?>> = Array(length) { Array<Piece?>(length, { null }) }
         try {
-            newBoard = super.clone() as xyz.flove.square.Board
-            val pieces = Array<Array<Piece?>?>(length, { null })
+            newBoard = super.clone() as Board
             for (i in 0..length - 1) {
                 for (j in 0..length - 1) {
-                    if (panel[i]!![j] != null) {
-                        pieces[i]!![j] = Piece(Position(i, j), panel[i]!![j]!!.color)
+                    if (panel[i][j] != null) {
+                        pieces[i][j] = Piece(Position(i, j), panel[i][j]!!.color)
                     }
                 }
             }

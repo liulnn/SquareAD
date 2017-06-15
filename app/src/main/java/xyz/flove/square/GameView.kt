@@ -14,7 +14,7 @@ import xyz.flove.square.core.*
 
 class GameView(context: Context, attrs: AttributeSet) : View(context, attrs) {
 
-    var mainActivity: MainActivity? = null
+    var mainActivity: MainActivity = context as MainActivity
     var mBoardLineUnit = 0
     var mPieceDiameter = 0
     var mStartX: Int = 0// 棋盘定位的左上角X
@@ -33,7 +33,6 @@ class GameView(context: Context, attrs: AttributeSet) : View(context, attrs) {
     var stepCount = 0
 
     init {
-        this.mainActivity = context as MainActivity
         this.isFocusable = true
         this.isFocusableInTouchMode = true
         this.panelLength = 5
@@ -45,7 +44,8 @@ class GameView(context: Context, attrs: AttributeSet) : View(context, attrs) {
 
     fun initGame(self: Color, enemy: Color) {
         status = GameStatus.START
-        board = Board(Array<Array<Piece?>?>(this.panelLength, { null }))
+        var panel: Array<Array<Piece?>> = Array(this.panelLength) { Array<Piece?>(this.panelLength, { null }) }
+        board = Board(panel)
         this.mPlayer = People(board!!, self) as Army
         this.rivalPlayer = Ai(board!!, enemy)
         //        this.rivalPlayer = new People(board, enemy);
@@ -144,9 +144,9 @@ class GameView(context: Context, attrs: AttributeSet) : View(context, attrs) {
         }
         drawable.setBounds(0, 0, drawable.minimumWidth,
                 drawable.minimumHeight)
-        mainActivity!!.mPlayer!!.setCompoundDrawables(null, null, drawable, null)
+        mainActivity.mPlayer!!.setCompoundDrawables(null, null, drawable, null)
         stepCount = 0
-        mainActivity!!.mStepCount!!.text = "0"
+        mainActivity.mStepCount!!.text = "0"
     }
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
@@ -195,7 +195,7 @@ class GameView(context: Context, attrs: AttributeSet) : View(context, attrs) {
             }
             stepCount += steps
             this.invalidate()
-            mainActivity!!.mStepCount!!.text = stepCount.toString()
+            mainActivity.mStepCount!!.text = stepCount.toString()
             if (stepCount > 0) {
                 stepCount--
                 return true
@@ -220,8 +220,8 @@ class GameView(context: Context, attrs: AttributeSet) : View(context, attrs) {
                     return true
                 }
                 stepCount += steps
-                if (stepCount > 0 && board!!.getCanEatPieces(currentPlayer!!.color)!!.isNotEmpty()) {
-                    mainActivity!!.mStepCount!!.text = stepCount.toString()
+                if (stepCount > 0 && board!!.getCanEatPieces(currentPlayer!!.color).isNotEmpty()) {
+                    mainActivity.mStepCount!!.text = stepCount.toString()
                     board!!.status = BoardStatus.EAT
                     this.invalidate()
                     return true
@@ -237,7 +237,7 @@ class GameView(context: Context, attrs: AttributeSet) : View(context, attrs) {
                     return true
                 }
                 stepCount--
-                mainActivity!!.mStepCount!!.text = stepCount.toString()
+                mainActivity.mStepCount!!.text = stepCount.toString()
                 this.invalidate()
                 if (stepCount > 0) {
                     return true

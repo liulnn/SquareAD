@@ -22,9 +22,9 @@ class Rule(private val army: Army, private val position: Position) {
      */
     private fun computeFoursquareSuccess() {
         // 子的方位：中，西，西北，北，东北，东，东南，南，西南
-        val piece = army.board.getPiece(position.x, position.y)
+        val piece = army.board.getPiece(position.x, position.y) ?: return
         var westPiece: Piece? = null
-        if (piece!!.position.x - 1 >= 0) {
+        if (piece.position.x - 1 >= 0) {
             westPiece = army.board.getPiece(position.x - 1, position.y)
         }
         var westNorthPiece: Piece? = null
@@ -103,7 +103,7 @@ class Rule(private val army: Army, private val position: Position) {
      * 成拉：放子或走子五棋子在一条线上，横竖匀可（除四条边）。
      */
     private fun computeLineSuccess() {
-        val piece = army.board.getPiece(position.x, position.y)
+        val piece = army.board.getPiece(position.x, position.y) ?: return
 
         val latLinePieces = arrayOfNulls<Piece>(5)
         val lonLinePieces = arrayOfNulls<Piece>(5)
@@ -112,13 +112,13 @@ class Rule(private val army: Army, private val position: Position) {
         var lonLineCounter = 0
 
         for (i in 0..4) {
-            if (null != army.board.getPiece(i, position.y) && army.board.getPiece(i, position.y)!!.color == piece!!.color) {
+            if (null != army.board.getPiece(i, position.y) && army.board.getPiece(i, position.y)!!.color == piece.color) {
                 latLinePieces[i] = army.board.getPiece(i, position.y)
                 latLineCounter++
             }
         }
         for (i in 0..4) {
-            if (null != army.board.getPiece(position.x, i) && army.board.getPiece(position.x, i)!!.color == piece!!.color) {
+            if (null != army.board.getPiece(position.x, i) && army.board.getPiece(position.x, i)!!.color == piece.color) {
                 lonLinePieces[i] = army.board.getPiece(position.x, i)
                 lonLineCounter++
             }
@@ -158,7 +158,7 @@ class Rule(private val army: Army, private val position: Position) {
      * 五斜：放子或走子成五棋子在一条斜线上，仅有二个。
      */
     private fun computeObliqueSuccess() {
-        val piece = army.board.getPiece(position.x, position.y)
+        val piece = army.board.getPiece(position.x, position.y) ?: return
         //成斜：西北东南
         when (position.y - position.x) {
             -2 -> {
@@ -167,7 +167,7 @@ class Rule(private val army: Army, private val position: Position) {
                 run {
                     var i = 0
                     while (i + 2 <= 4) {
-                        if (null != army.board.getPiece(i + 2, i) && army.board.getPiece(i + 2, i)!!.color == piece!!.color) {
+                        if (null != army.board.getPiece(i + 2, i) && army.board.getPiece(i + 2, i)!!.color == piece.color) {
                             wnesRightThreeObliquePieces[i] = army.board.getPiece(i + 2, i)
                             wnesRightThreeObliqueCounter += 1
                         }
@@ -186,7 +186,7 @@ class Rule(private val army: Army, private val position: Position) {
                 run {
                     var i = 0
                     while (i + 1 <= 4) {
-                        if (null != army.board.getPiece(i + 1, i) && army.board.getPiece(i + 1, i)!!.color == piece!!.color) {
+                        if (null != army.board.getPiece(i + 1, i) && army.board.getPiece(i + 1, i)!!.color == piece.color) {
                             wnesRightFourObliquePieces[i] = army.board.getPiece(i + 1, i)
                             wnesRightFourObliqueCounter++
                         }
@@ -203,7 +203,7 @@ class Rule(private val army: Army, private val position: Position) {
                 val wnesCenterObliquePieces = arrayOfNulls<Piece>(5)
                 var wnesCenterObliqueCounter = 0
                 for (i in 0..4) {
-                    if (null != army.board.getPiece(i, i) && army.board.getPiece(i, i)!!.color == piece!!.color) {
+                    if (null != army.board.getPiece(i, i) && army.board.getPiece(i, i)!!.color == piece.color) {
                         wnesCenterObliquePieces[i] = army.board.getPiece(i, i)
                         wnesCenterObliqueCounter++
                     }
@@ -220,7 +220,7 @@ class Rule(private val army: Army, private val position: Position) {
                 run {
                     var i = 0
                     while (i + 1 <= 4) {
-                        if (null != army.board.getPiece(i, i + 1) && army.board.getPiece(i, i + 1)!!.color == piece!!.color) {
+                        if (null != army.board.getPiece(i, i + 1) && army.board.getPiece(i, i + 1)!!.color == piece.color) {
                             wnesLeftFourObliquePieces[i] = army.board.getPiece(i, i + 1)
                             wnesLeftFourObliqueCounter++
                         }
@@ -238,7 +238,7 @@ class Rule(private val army: Army, private val position: Position) {
                 var wnesLeftThreeObliqueCounter = 0
                 var i = 0
                 while (i + 2 <= 4) {
-                    if (null != army.board.getPiece(i, i + 2) && army.board.getPiece(i, i + 2)!!.color == piece!!.color) {
+                    if (null != army.board.getPiece(i, i + 2) && army.board.getPiece(i, i + 2)!!.color == piece.color) {
                         wnesLeftThreeObliquePieces[i] = army.board.getPiece(i, i + 2)
                         wnesLeftThreeObliqueCounter++
                     }
@@ -262,7 +262,7 @@ class Rule(private val army: Army, private val position: Position) {
                 run {
                     var i = 0
                     while (2 - i >= 0) {
-                        if (null != army.board.getPiece(i, 2 - i) && army.board.getPiece(i, 2 - i)!!.color == piece!!.color) {
+                        if (null != army.board.getPiece(i, 2 - i) && army.board.getPiece(i, 2 - i)!!.color == piece.color) {
                             enwsLeftThreeObliquePieces[i] = army.board.getPiece(i, 2 - i)
                             enwsLeftThreeObliqueCounter++
                         }
@@ -281,7 +281,7 @@ class Rule(private val army: Army, private val position: Position) {
                 run {
                     var i = 0
                     while (3 - i >= 0) {
-                        if (null != army.board.getPiece(i, 3 - i) && army.board.getPiece(i, 3 - i)!!.color == piece!!.color) {
+                        if (null != army.board.getPiece(i, 3 - i) && army.board.getPiece(i, 3 - i)!!.color == piece.color) {
                             enwsLeftFourObliquePieces[i] = army.board.getPiece(i, 3 - i)
                             enwsLeftFourObliqueCounter++
                         }
@@ -300,7 +300,7 @@ class Rule(private val army: Army, private val position: Position) {
                 run {
                     var i = 0
                     while (4 - i >= 0) {
-                        if (null != army.board.getPiece(i, 4 - i) && army.board.getPiece(i, 4 - i)!!.color == piece!!.color) {
+                        if (null != army.board.getPiece(i, 4 - i) && army.board.getPiece(i, 4 - i)!!.color == piece.color) {
                             enwsCenterObliquePieces[i] = army.board.getPiece(i, 4 - i)
                             enwsCenterObliqueCounter++
                         }
@@ -319,7 +319,7 @@ class Rule(private val army: Army, private val position: Position) {
                 run {
                     var i = 1
                     while (5 - i >= 1) {
-                        if (null != army.board.getPiece(i, 5 - i) && army.board.getPiece(i, 5 - i)!!.color == piece!!.color) {
+                        if (null != army.board.getPiece(i, 5 - i) && army.board.getPiece(i, 5 - i)!!.color == piece.color) {
                             enwsRightFourObliquePieces[i - 1] = army.board.getPiece(i, 5 - i)
                             enwsRightFourObliqueCounter++
                         }
@@ -337,7 +337,7 @@ class Rule(private val army: Army, private val position: Position) {
                 var enwsRightThreeObliqueCounter = 0
                 var i = 2
                 while (6 - i >= 2) {
-                    if (null != army.board.getPiece(i, 6 - i) && army.board.getPiece(i, 6 - i)!!.color == piece!!.color) {
+                    if (null != army.board.getPiece(i, 6 - i) && army.board.getPiece(i, 6 - i)!!.color == piece.color) {
                         enwsRightThreeObliquePieces[i - 2] = army.board.getPiece(i, 6 - i)
                         enwsRightThreeObliqueCounter++
                     }
@@ -355,8 +355,8 @@ class Rule(private val army: Army, private val position: Position) {
     }
 
     fun clearSquares() {
-        val piece = army.board.getPiece(position)
-        for (square in piece!!.squares!!) {
+        val piece = army.board.getPiece(position) ?: return
+        for (square in piece.squares) {
             when (square) {
                 FiveSquare.WEST_NORTH_SQUARE -> {
                     val westPiece1 = army.board.getPiece(position.x - 1, position.y)
@@ -404,76 +404,82 @@ class Rule(private val army: Army, private val position: Position) {
                 FiveSquare.EAST_LON_LINE, FiveSquare.CENTER_LON_LINE, FiveSquare.WEST_LON_LINE -> for (j in 0..4) {
                     army.board.getPiece(position.x, j)!!.deleteSquares(square)
                 }
-                FiveSquare.WNES_CENTER_OBLIQUE, FiveSquare.WNES_LEFT_FOUR_OBLIQUE, FiveSquare.WNES_LEFT_THREE_OBLIQUE, FiveSquare.WNES_RIGHT_FOUR_OBLIQUE, FiveSquare.WNES_RIGHT_THREE_OBLIQUE -> when (position.y - position.x) {
-                    -2 -> run {
-                        var i = 0
-                        while (i + 2 <= 4) {
-                            army.board.getPiece(i + 2, i)!!.deleteSquares(FiveSquare.WNES_RIGHT_THREE_OBLIQUE)
-                            i++
+                FiveSquare.WNES_CENTER_OBLIQUE, FiveSquare.WNES_LEFT_FOUR_OBLIQUE,
+                FiveSquare.WNES_LEFT_THREE_OBLIQUE, FiveSquare.WNES_RIGHT_FOUR_OBLIQUE,
+                FiveSquare.WNES_RIGHT_THREE_OBLIQUE ->
+                    when (position.y - position.x) {
+                        -2 -> run {
+                            var i = 0
+                            while (i + 2 <= 4) {
+                                army.board.getPiece(i + 2, i)!!.deleteSquares(FiveSquare.WNES_RIGHT_THREE_OBLIQUE)
+                                i++
+                            }
+                        }
+                        -1 -> run {
+                            var i = 0
+                            while (i + 1 <= 4) {
+                                army.board.getPiece(i + 1, i)!!.deleteSquares(FiveSquare.WNES_RIGHT_FOUR_OBLIQUE)
+                                i++
+                            }
+                        }
+                        0 -> for (i in 0..4) {
+                            army.board.getPiece(i, i)!!.deleteSquares(FiveSquare.WNES_CENTER_OBLIQUE)
+                        }
+                        1 -> run {
+                            var i = 0
+                            while (i + 1 <= 4) {
+                                army.board.getPiece(i, i + 1)!!.deleteSquares(FiveSquare.WNES_LEFT_FOUR_OBLIQUE)
+                                i++
+                            }
+                        }
+                        2 -> run {
+                            var i = 0
+                            while (i + 2 <= 4) {
+                                army.board.getPiece(i, i + 2)!!.deleteSquares(FiveSquare.WNES_LEFT_THREE_OBLIQUE)
+                                i++
+                            }
                         }
                     }
-                    -1 -> run {
-                        var i = 0
-                        while (i + 1 <= 4) {
-                            army.board.getPiece(i + 1, i)!!.deleteSquares(FiveSquare.WNES_RIGHT_FOUR_OBLIQUE)
-                            i++
+                FiveSquare.ENWS_CENTER_OBLIQUE, FiveSquare.ENWS_LEFT_FOUR_OBLIQUE,
+                FiveSquare.ENWS_LEFT_THREE_OBLIQUE, FiveSquare.ENWS_RIGHT_FOUR_OBLIQUE,
+                FiveSquare.ENWS_RIGHT_THREE_OBLIQUE ->
+                    when (position.y + position.x) {
+                        2 -> run {
+                            var i = 0
+                            while (2 - i >= 0) {
+                                army.board.getPiece(i, 2 - i)!!.deleteSquares(FiveSquare.ENWS_LEFT_THREE_OBLIQUE)
+                                i++
+                            }
+                        }
+                        3 -> run {
+                            var i = 0
+                            while (3 - i >= 0) {
+                                army.board.getPiece(i, 3 - i)!!.deleteSquares(FiveSquare.ENWS_LEFT_FOUR_OBLIQUE)
+                                i++
+                            }
+                        }
+                        4 -> run {
+                            var i = 0
+                            while (4 - i >= 0) {
+                                army.board.getPiece(i, 4 - i)!!.deleteSquares(FiveSquare.ENWS_CENTER_OBLIQUE)
+                                i++
+                            }
+                        }
+                        5 -> run {
+                            var i = 1
+                            while (5 - i >= 1) {
+                                army.board.getPiece(i, 5 - i)!!.deleteSquares(FiveSquare.ENWS_RIGHT_FOUR_OBLIQUE)
+                                i++
+                            }
+                        }
+                        6 -> run {
+                            var i = 2
+                            while (6 - i >= 2) {
+                                army.board.getPiece(i, 6 - i)!!.deleteSquares(FiveSquare.ENWS_RIGHT_THREE_OBLIQUE)
+                                i++
+                            }
                         }
                     }
-                    0 -> for (i in 0..4) {
-                        army.board.getPiece(i, i)!!.deleteSquares(FiveSquare.WNES_CENTER_OBLIQUE)
-                    }
-                    1 -> run {
-                        var i = 0
-                        while (i + 1 <= 4) {
-                            army.board.getPiece(i, i + 1)!!.deleteSquares(FiveSquare.WNES_LEFT_FOUR_OBLIQUE)
-                            i++
-                        }
-                    }
-                    2 -> run {
-                        var i = 0
-                        while (i + 2 <= 4) {
-                            army.board.getPiece(i, i + 2)!!.deleteSquares(FiveSquare.WNES_LEFT_THREE_OBLIQUE)
-                            i++
-                        }
-                    }
-                }
-                FiveSquare.ENWS_CENTER_OBLIQUE, FiveSquare.ENWS_LEFT_FOUR_OBLIQUE, FiveSquare.ENWS_LEFT_THREE_OBLIQUE, FiveSquare.ENWS_RIGHT_FOUR_OBLIQUE, FiveSquare.ENWS_RIGHT_THREE_OBLIQUE -> when (position.y + position.x) {
-                    2 -> run {
-                        var i = 0
-                        while (2 - i >= 0) {
-                            army.board.getPiece(i, 2 - i)!!.deleteSquares(FiveSquare.ENWS_LEFT_THREE_OBLIQUE)
-                            i++
-                        }
-                    }
-                    3 -> run {
-                        var i = 0
-                        while (3 - i >= 0) {
-                            army.board.getPiece(i, 3 - i)!!.deleteSquares(FiveSquare.ENWS_LEFT_FOUR_OBLIQUE)
-                            i++
-                        }
-                    }
-                    4 -> run {
-                        var i = 0
-                        while (4 - i >= 0) {
-                            army.board.getPiece(i, 4 - i)!!.deleteSquares(FiveSquare.ENWS_CENTER_OBLIQUE)
-                            i++
-                        }
-                    }
-                    5 -> run {
-                        var i = 1
-                        while (5 - i >= 1) {
-                            army.board.getPiece(i, 5 - i)!!.deleteSquares(FiveSquare.ENWS_RIGHT_FOUR_OBLIQUE)
-                            i++
-                        }
-                    }
-                    6 -> run {
-                        var i = 2
-                        while (6 - i >= 2) {
-                            army.board.getPiece(i, 6 - i)!!.deleteSquares(FiveSquare.ENWS_RIGHT_THREE_OBLIQUE)
-                            i++
-                        }
-                    }
-                }
             }
         }
         army.board.removePiece(piece)

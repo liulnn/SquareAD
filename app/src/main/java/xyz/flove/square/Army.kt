@@ -67,7 +67,7 @@ abstract class Army(var board: Board, var color: Color, var isAi: Boolean) {
 
     fun eatPiece(position: Position): Boolean {
         val piece = board.getPiece(position)
-        if (piece == null || piece.color == color || board.isSquare(position)) {
+        if (piece == null || piece.color == color || board.isSquare(piece)) {
             return false
         }
         board.removePiece(piece)

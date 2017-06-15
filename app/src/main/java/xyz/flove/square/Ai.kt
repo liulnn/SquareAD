@@ -8,8 +8,6 @@ import xyz.flove.square.core.People
 
 class Ai(board: Board, color: Color) : Army(board, color, true) {
 
-    //判断己方得分
-    //判断对方得分
     val nextPosition: Position?
         get() {
 
@@ -18,6 +16,7 @@ class Ai(board: Board, color: Color) : Army(board, color, true) {
             for (i in 0..board.length - 1) {
                 for (j in 0..board.length - 1) {
                     if (board.getPiece(i, j) == null || board.getPiece(i, j)!!.color == Color.NULL) {
+                        //判断己方得分
                         val self_board = board.clone()
                         val ai = xyz.flove.square.Ai(self_board, this.color)
                         val self_position = Position(i, j)
@@ -28,6 +27,7 @@ class Ai(board: Board, color: Color) : Army(board, color, true) {
                             maxScore = steps
                             position = ai.board.getPiece(i, j)!!.position
                         }
+                        //判断对方得分
                         val enemy_board = board.clone()
                         val enemy: Army
                         if (this.color == Color.BLACK) {
@@ -73,7 +73,7 @@ class Ai(board: Board, color: Color) : Army(board, color, true) {
             for (i in 0..board.length - 1) {
                 for (j in 0..board.length - 1) {
                     val directions = board.getMoveDirection(Position(i, j))
-                    if (directions!!.isNotEmpty()) {
+                    if (directions.isNotEmpty()) {
                         when (directions[0]) {
                             Direction.WEST -> position = Position(i - 1, j)
                             Direction.EAST -> position = Position(i + 1, j)
@@ -90,11 +90,13 @@ class Ai(board: Board, color: Color) : Army(board, color, true) {
         get() {
             var position: Position? = null
             val directions = board.getMoveDirection(lastChecked!!)
-            when (directions!![0]) {
-                Direction.WEST -> position = Position(lastChecked!!.x - 1, lastChecked!!.y)
-                Direction.EAST -> position = Position(lastChecked!!.x + 1, lastChecked!!.y)
-                Direction.NORTH -> position = Position(lastChecked!!.x, lastChecked!!.y - 1)
-                Direction.SORTH -> position = Position(lastChecked!!.x, lastChecked!!.y + 1)
+            if (directions.isNotEmpty()) {
+                when (directions[0]) {
+                    Direction.WEST -> position = Position(lastChecked!!.x - 1, lastChecked!!.y)
+                    Direction.EAST -> position = Position(lastChecked!!.x + 1, lastChecked!!.y)
+                    Direction.NORTH -> position = Position(lastChecked!!.x, lastChecked!!.y - 1)
+                    Direction.SORTH -> position = Position(lastChecked!!.x, lastChecked!!.y + 1)
+                }
             }
             return position
         }
@@ -102,7 +104,7 @@ class Ai(board: Board, color: Color) : Army(board, color, true) {
     val eatPosition: Position?
         get() {
             val positions = board.getCanEatPieces(color)
-            if (positions != null) {
+            if (positions.isNotEmpty()) {
                 return positions[0]
             }
             return null
